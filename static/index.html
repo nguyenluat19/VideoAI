@@ -1,0 +1,2018 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VideoAI Studio — Nền tảng tạo video AI chuyên nghiệp</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#090b10;--bg2:#0e1118;--bg3:#13161f;
+  --card:#151923;--card2:#1a1f2e;
+  --bd:rgba(255,255,255,0.08);--bd2:rgba(255,255,255,0.14);
+  --tx:#e8eaf2;--tx2:#9aa3b8;--tx3:#5c6480;
+  --ac:#6366f1;--ac2:#818cf8;--ac-glow:rgba(99,102,241,0.25);
+  --ok:#22d3a0;--ok2:rgba(34,211,160,0.12);
+  --er:#f87171;--er2:rgba(248,113,113,0.12);
+  --warn:#fb923c;--warn2:rgba(251,146,60,0.12);
+  --sidebar-w:250px;--radius:12px;--radius-sm:8px;
+  --shadow:0 4px 24px rgba(0,0,0,0.4);--shadow-lg:0 8px 48px rgba(0,0,0,0.6);
+  --trans:0.18s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5;overflow:hidden}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:99px}
+
+/* LAYOUT */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--bd);display:flex;flex-direction:column;
+  overflow:hidden;z-index:10;
+}
+.sb-logo{
+  padding:18px 16px 14px;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;gap:10px;
+}
+.sb-logo .icon{
+  width:36px;height:36px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  box-shadow:0 0 18px rgba(99,102,241,0.4);
+}
+.sb-logo .name{font-size:15px;font-weight:700;letter-spacing:-0.3px}
+.sb-logo .name span{color:var(--ac2)}
+.sb-nav{flex:1;overflow-y:auto;padding:10px 8px}
+.nav-sec{margin-bottom:6px}
+.nav-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);padding:8px 10px 3px}
+.ni{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;
+  border-radius:var(--radius-sm);cursor:pointer;color:var(--tx2);
+  font-size:13px;font-weight:500;transition:all var(--trans);
+  border:1px solid transparent;position:relative;user-select:none;
+}
+.ni:hover{background:var(--bg3);color:var(--tx)}
+.ni.on{background:linear-gradient(135deg,rgba(99,102,241,0.18),rgba(139,92,246,0.08));color:var(--ac2);border-color:rgba(99,102,241,0.22)}
+.ni.on::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:55%;background:linear-gradient(180deg,var(--ac),var(--ac2));border-radius:0 3px 3px 0}
+.ni .ic{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sb-foot{padding:10px;border-top:1px solid var(--bd)}
+.u-pill{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);background:var(--bg3);cursor:default}
+.u-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.u-info{flex:1;min-width:0}
+.u-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u-cr{font-size:11px;color:var(--ok);font-weight:600}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--bg);overflow:hidden}
+.topbar{
+  height:56px;padding:0 24px;border-bottom:1px solid var(--bd);
+  background:rgba(14,17,24,0.7);backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:9;
+}
+.tb-title{font-size:16px;font-weight:700}
+.tb-right{display:flex;align-items:center;gap:10px}
+.page{flex:1;overflow-y:auto;padding:24px;scroll-behavior:smooth}
+
+/* CARDS & PANELS */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);padding:20px;position:relative}
+.card-sm{background:var(--card);border:1px solid var(--bd);border-radius:var(--radius-sm);padding:14px}
+.card:hover{border-color:var(--bd2)}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;padding:8px 14px;
+  border-radius:var(--radius-sm);font-size:13px;font-weight:500;
+  cursor:pointer;border:1px solid var(--bd);background:var(--bg3);
+  color:var(--tx);transition:all var(--trans);user-select:none;text-decoration:none;
+}
+.btn:hover{background:var(--card2);border-color:var(--bd2)}
+.btn-p{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(99,102,241,0.35)}
+.btn-p:hover{box-shadow:0 4px 18px rgba(99,102,241,0.5);transform:translateY(-1px)}
+.btn-ok{background:var(--ok2);color:var(--ok);border-color:rgba(34,211,160,0.25)}
+.btn-ok:hover{background:rgba(34,211,160,0.2)}
+.btn-er{background:var(--er2);color:var(--er);border-color:rgba(248,113,113,0.25)}
+.btn-er:hover{background:rgba(248,113,113,0.2)}
+.btn-warn{background:var(--warn2);color:var(--warn);border-color:rgba(251,146,60,0.25)}
+.btn-sm{padding:5px 9px;font-size:12px}
+.btn:disabled{opacity:0.45;pointer-events:none}
+
+/* FORMS */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--tx2);margin-bottom:6px}
+input,textarea,select{
+  width:100%;background:var(--bg2);border:1px solid var(--bd);
+  border-radius:var(--radius-sm);color:var(--tx);padding:8px 12px;
+  font-size:13px;font-family:inherit;transition:border-color var(--trans);outline:none;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac-glow)}
+input[type="file"]{padding:6px;cursor:pointer}
+textarea{resize:vertical;min-height:70px}
+select{cursor:pointer}
+select option{background:var(--bg2);color:var(--tx)}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.ga{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+@media(max-width:850px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* BADGES & TAGS */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:600}
+.b-ac{background:rgba(99,102,241,0.15);color:var(--ac2);border:1px solid rgba(99,102,241,0.3)}
+.b-ok{background:var(--ok2);color:var(--ok);border:1px solid rgba(34,211,160,0.3)}
+.b-er{background:var(--er2);color:var(--er);border:1px solid rgba(248,113,113,0.3)}
+.b-warn{background:var(--warn2);color:var(--warn);border:1px solid rgba(251,146,60,0.3)}
+.b-mu{background:var(--bg3);color:var(--tx3);border:1px solid var(--bd)}
+.tag{background:var(--bg3);border:1px solid var(--bd);padding:2px 7px;border-radius:4px;font-size:11px;color:var(--tx2)}
+
+/* TABLES */
+.tw{overflow-x:auto;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:9px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);border-bottom:1px solid var(--bd)}
+td{padding:10px 12px;border-bottom:1px solid var(--bd);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+
+/* SPINNER & ANIMATIONS */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle}
+.su{animation:slideUp .22s ease-out forwards}
+
+/* UTILS */
+.row{display:flex;align-items:center}
+.gap-4{gap:4px}.gap-6{gap:6px}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}
+.mla{margin-left:auto}
+.bold{font-weight:600}
+.mu{color:var(--tx2)}
+.xs{font-size:11px}.sm{font-size:12px}.lg{font-size:16px}
+.ok{color:var(--ok)}.er{color:var(--er)}.ac{color:var(--ac2)}.warn{color:var(--warn)}
+.mb4{margin-bottom:4px}.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}.mb20{margin-bottom:20px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}
+.hide{display:none!important}
+.sec{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.sec h2{font-size:16px;font-weight:700}
+.sec p,.pdesc{font-size:12px;color:var(--tx2)}
+.ptitle{font-size:18px;font-weight:700}
+
+/* TEMPLATE CARDS */
+.tc{background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);overflow:hidden;transition:all var(--trans);display:flex;flex-direction:column}
+.tc:hover{border-color:var(--ac);transform:translateY(-2px);box-shadow:var(--shadow)}
+.tc-med{position:relative;background:#000;aspect-ratio:16/9;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.tc-over{position:absolute;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity var(--trans)}
+.tc:hover .tc-over{opacity:1}
+.play-ic{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.9);color:#000;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 14px rgba(0,0,0,0.5)}
+.tc-body{padding:14px;flex:1;display:flex;flex-direction:column}
+.tc-title{font-size:13px;font-weight:600;margin-bottom:6px;line-height:1.4}
+
+/* HISTORY ITEM */
+.hi{background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);padding:14px;display:flex;align-items:center;gap:14px;transition:border-color var(--trans)}
+.hi:hover{border-color:var(--bd2)}
+.hi-th{width:70px;height:70px;border-radius:var(--radius-sm);background:#000;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+
+/* PROGRESS BAR */
+.pb{background:var(--bg3);border-radius:99px;height:6px;overflow:hidden;width:100%}
+.pf{background:linear-gradient(90deg,var(--ac),var(--ac2));height:100%;border-radius:99px;transition:width .3s}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.ti{background:var(--card2);border:1px solid var(--bd2);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;pointer-events:auto;animation:slideUp .2s ease-out;max-width:360px}
+.ti-ok{border-color:rgba(34,211,160,0.4)}.ti-er{border-color:rgba(248,113,113,0.4)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:50px 20px;border:1px dashed var(--bd);border-radius:var(--radius)}
+.empty-ic{font-size:36px;margin-bottom:10px;opacity:0.4}
+
+/* AUTH */
+.auth-wrap{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.auth-card{width:100%;max-width:390px;background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-lg)}
+.auth-logo{text-align:center;margin-bottom:22px}
+.auth-logo .icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:inline-flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px;box-shadow:0 0 24px rgba(99,102,241,0.4)}
+.auth-logo h1{font-size:19px;font-weight:700}
+.auth-logo p{font-size:12px;color:var(--tx2);margin-top:2px}
+.auth-tabs{display:flex;background:var(--bg2);border-radius:var(--radius-sm);padding:3px;margin-bottom:18px}
+.auth-tab{flex:1;padding:7px;border:none;background:none;color:var(--tx2);font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;transition:all var(--trans)}
+.auth-tab.on{background:var(--card);color:var(--tx);box-shadow:0 1px 4px rgba(0,0,0,0.2)}
+
+/* QUICK TOPUP BTNS */
+.qa{display:flex;gap:7px;flex-wrap:wrap}
+.qa-btn{padding:5px 10px;border-radius:var(--radius-sm);border:1px solid var(--bd);background:var(--bg2);color:var(--tx2);font-size:12px;cursor:pointer;transition:all var(--trans)}
+.qa-btn:hover{background:var(--card2);color:var(--tx);border-color:var(--ac)}
+
+/* PIPELINE STEPS */
+.pipe-step{background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);padding:16px;margin-bottom:14px;position:relative}
+.pipe-step.active{border-color:var(--ac);box-shadow:0 0 16px rgba(99,102,241,0.15)}
+.pipe-step.done{border-color:rgba(34,211,160,0.3)}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--bg3);border:1px solid var(--bd);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--tx2);margin-right:8px}
+.pipe-step.active .step-num{background:var(--ac);color:#fff;border-color:transparent}
+.pipe-step.done .step-num{background:var(--ok);color:#000;border-color:transparent}
+
+/* CATEGORY PILLS */
+.cat-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.cat-pill{padding:5px 12px;border-radius:99px;border:1px solid var(--bd);background:var(--bg2);color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;transition:all var(--trans)}
+.cat-pill:hover{border-color:var(--bd2);color:var(--tx)}
+.cat-pill.on{background:var(--ac);color:#fff;border-color:transparent}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-wrap" class="auth-wrap hide">
+  <div class="auth-card su">
+    <div class="auth-logo">
+      <div class="icon">🎬</div>
+      <h1>VideoAI Studio</h1>
+      <p>Nền tảng tạo video AI chuyên nghiệp</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="tab-li">Đăng nhập</button>
+      <button class="auth-tab" id="tab-rg">Đăng ký</button>
+    </div>
+    <div class="field"><label>Tên đăng nhập</label><input id="a-u" placeholder="username" autocomplete="username"></div>
+    <div class="field hide" id="e-field"><label>Email</label><input id="a-e" type="email" placeholder="you@example.com"></div>
+    <div class="field"><label>Mật khẩu</label><input id="a-p" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+    <button class="btn btn-p" id="a-sub" style="width:100%;justify-content:center;margin-top:6px;padding:10px">Đăng nhập</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-wrap" class="app hide">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="icon">🎬</div>
+      <div class="name">Video<span>AI</span></div>
+    </div>
+    <nav class="sb-nav" id="sb-nav"></nav>
+    <div class="sb-foot">
+      <div class="u-pill">
+        <div class="u-av" id="u-av">?</div>
+        <div class="u-info">
+          <div class="u-name" id="u-name">...</div>
+          <div class="u-cr" id="u-cr">0 credit</div>
+        </div>
+        <button class="btn btn-sm btn-er" id="btn-out" style="padding:3px 8px;font-size:11px">Thoát</button>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-title" id="tb-title">Dashboard</div>
+      <div class="tb-right" id="tb-right"></div>
+    </div>
+    <div class="page" id="page"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ── UTILS ── */
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const fmtD=d=>new Date(d).toLocaleString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const fmtV=n=>Number(n).toLocaleString('vi-VN')+'đ';
+    // Local pipeline button handler
+const fmtT=n=>`${Math.floor(n/60)}:${String(Math.floor(n%60)).padStart(2,'0')}`;
+
+let token=localStorage.token||'',me=null,tab='library',lastScript='',pollT=null;
+
+/* ── API ── */
+async function api(path,opt={}){
+  const h={...(opt.headers||{})};
+  if(token)h.Authorization='Bearer '+token;
+  if(opt.json){h['Content-Type']='application/json';opt.body=JSON.stringify(opt.json)}
+  const r=await fetch(path,{...opt,headers:h});
+  let d=null;try{d=await r.json()}catch{}
+  if(!r.ok){const m=d?.detail?.message||d?.detail||r.statusText;throw new Error(typeof m==='string'?m:JSON.stringify(m))}
+  return d;
+}
+const post=(p,j)=>api(p,{method:'POST',json:j});
+const patch=(p,j)=>api(p,{method:'PATCH',json:j});
+async function upload(file){const f=new FormData();f.append('file',file);return(await api('/api/uploads',{method:'POST',body:f})).url}
+
+/* ── TOAST ── */
+function toast(msg,type='i'){
+  const ic={o:'✅',e:'❌',i:'💬'};
+  const el=document.createElement('div');
+  el.className=`ti${type==='o'?' ti-ok':type==='e'?' ti-er':''}`;
+  el.innerHTML=`<span>${ic[type]||ic.i}</span><span>${esc(msg)}</span>`;
+  $('#toast').appendChild(el);
+  setTimeout(()=>el.style.opacity='0',3500);
+  setTimeout(()=>el.remove(),4000);
+}
+const tok=m=>toast(m,'o'),ter=m=>toast(m,'e');
+
+/* ── BOOT ── */
+async function boot(){
+  if(token){try{me=await api('/api/auth/me')}catch{token='';localStorage.token=''}}
+  render();
+}
+
+function render(){
+  if(pollT){clearTimeout(pollT);pollT=null}
+  if(!me){$('#auth-wrap').classList.remove('hide');$('#app-wrap').classList.add('hide');return}
+  $('#auth-wrap').classList.add('hide');$('#app-wrap').classList.remove('hide');
+  renderSb();renderPage();
+}
+
+function refreshBar(){
+  if(!me)return;
+  $('#u-av').textContent=me.username[0].toUpperCase();
+  $('#u-name').textContent=me.username;
+  $('#u-cr').textContent=me.credits_balance.toLocaleString('vi')+' credit';
+}
+async function refreshMe(){me=await api('/api/auth/me');refreshBar()}
+
+/* ── AUTH UI ── */
+(()=>{
+  let isLi=true;
+  const setM=li=>{
+    isLi=li;
+    $('#tab-li').classList.toggle('on',li);
+    $('#tab-rg').classList.toggle('on',!li);
+    $('#e-field').classList.toggle('hide',li);
+    $('#a-sub').textContent=li?'Đăng nhập':'Đăng ký';
+  };
+  $('#tab-li').onclick=()=>setM(true);
+  $('#tab-rg').onclick=()=>setM(false);
+  $('#a-sub').onclick=async()=>{
+    try{
+      const body={username:$('#a-u').value,password:$('#a-p').value};
+      if(!isLi)body.email=$('#a-e').value;
+      const d=await post(isLi?'/api/auth/login':'/api/auth/register',body);
+      token=d.token;localStorage.token=token;me=d.user;render();
+    }catch(e){ter(e.message)}
+  };
+  ['a-u','a-p','a-e'].forEach(id=>{const el=$('#'+id);if(el)el.onkeydown=e=>{if(e.key==='Enter')$('#a-sub').click()}});
+})();
+$('#btn-out').onclick=()=>{token='';localStorage.token='';me=null;tab='library';render()};
+
+/* ── SIDEBAR NAVIGATION ── */
+const NAV=[
+  {s:'main',items:[
+    {id:'library',ic:'🎬',lb:'Thư viện Template'},
+    {id:'mytemplates',ic:'📁',lb:'Template của tôi'},
+    {id:'ai',ic:'🤖',lb:'Trợ lý AI'},
+    {id:'download',ic:'📥',lb:'Tải Video MXH'},
+    {id:'subtitles',ic:'🎙️',lb:'Dịch & Thêm Phụ đề'},
+    {id:'history',ic:'⏱',lb:'Lịch sử render'},
+    {id:'activity',ic:'📋',lb:'Nhật ký tài khoản'},
+    {id:'topup',ic:'💎',lb:'Nạp credit'},
+  ]},
+  {s:'admin',admin:true,items:[
+    {id:'users',ic:'👥',lb:'Tài khoản'},
+    {id:'adm',ic:'🛠',lb:'Admin'},
+    {id:'pricing',ic:'💰',lb:'Bảng giá'},
+    {id:'promos',ic:'🎉',lb:'Khuyến mãi'},
+  ]}
+];
+const TITLES={
+  library:'🎬 Thư viện Template',
+  mytemplates:'📁 Template của tôi',
+  ai:'🤖 Trợ lý AI Thông minh',
+  download:'📥 Tải Video Mạng Xã Hội',
+  subtitles:'🎙️ Dịch thuật & Thêm Phụ đề Video',
+  history:'⏱ Lịch sử render',
+  activity:'📋 Nhật ký tài khoản',
+  topup:'💎 Nạp Credit',
+  users:'👥 Quản lý tài khoản',
+  adm:'🛠 Quản trị hệ thống',
+  pricing:'💰 Bảng giá dịch vụ',
+  promos:'🎉 Chương trình khuyến mãi'
+};
+
+function renderSb(){
+  refreshBar();
+  const nav=NAV.filter(s=>!s.admin||me?.role==='admin');
+  $('#sb-nav').innerHTML=nav.map(s=>`
+    <div class="nav-sec">
+      <div class="nav-lbl">${s.s==='admin'?'Quản trị':'Tính năng chính'}</div>
+      ${s.items.map(n=>`<div class="ni${tab===n.id?' on':''}" data-nav="${n.id}"><span class="ic">${n.ic}</span>${n.lb}</div>`).join('')}
+    </div>`).join('');
+  $$('[data-nav]').forEach(el=>el.onclick=()=>{tab=el.dataset.nav;render()});
+}
+
+let lastWorkingVideoUrl='';
+
+function renderPage(){
+  $('#tb-title').textContent=TITLES[tab]||'Dashboard';
+  $('#tb-right').innerHTML='';
+  const pages={
+    library:pgLib,
+    mytemplates:pgMyTemplates,
+    ai:pgAI,
+    download:pgDownload,
+    subtitles:pgSubtitles,
+    history:pgHist,
+    activity:pgActivity,
+    topup:pgTopup,
+    users:pgUsers,
+    adm:pgAdm,
+    pricing:pgPrice,
+    promos:pgPromos
+  };
+  (pages[tab]||pgLib)();
+}
+
+/* ─────────── 1. THƯ VIỆN TEMPLATE (TÁI SỬ DỤNG TÍNH PHÍ BÌNH THƯỜNG) ─────────── */
+async function pgLib(){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    const ts=await api('/api/templates');
+    pc.innerHTML=`
+      <div class="sec">
+        <div>
+          <div class="ptitle">Thư viện Video & Template</div>
+          <div class="pdesc">Chọn bất kỳ template nào để tái sử dụng — chi phí hiển thị minh bạch trước khi tạo</div>
+        </div>
+      </div>
+      ${ts.length?`<div class="ga">${ts.map(t=>tCard(t)).join('')}</div>`:
+        `<div class="empty"><div class="empty-ic">📭</div><div style="font-size:14px;font-weight:600;color:var(--tx2)">Chưa có template</div><div class="sm mu">Admin chưa duyệt template nào</div></div>`}
+      <div id="gen-area" class="mt24"></div>`;
+    bindUse(ts,'gen-area');
+  }catch(e){pc.innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+function tCard(t){
+  const th=t.preview_video_url
+    ?`<video muted loop preload="none" style="width:100%;height:100%;object-fit:cover" src="${esc(t.preview_video_url)}" onmouseenter="this.play()" onmouseleave="this.pause()"></video>`
+    :t.thumbnail_url?`<img style="width:100%;height:100%;object-fit:cover" src="${esc(t.thumbnail_url)}" alt="">`
+    :`<div style="font-size:32px;opacity:.25">🎬</div>`;
+  const cc={full:'b-ac',hook:'b-warn',cta:'b-ok'};
+  return `<div class="tc">
+    <div class="tc-med">${th}<div class="tc-over"><div class="play-ic">▶</div></div></div>
+    <div class="tc-body">
+      <div class="tc-title">${esc(t.title)}</div>
+      <div class="row mb8 gap-4"><span class="badge ${cc[t.category]||'b-mu'}">${esc(t.category)}</span><span class="xs mu">×${t.usage_count} lượt dùng</span></div>
+      <div class="row gap-6 mt-auto">
+        <button class="btn btn-sm" data-detail="${t.id}" style="flex:1;justify-content:center">📋 Xem chi tiết</button>
+        <button class="btn btn-p btn-sm" data-use="${t.id}" style="flex:1;justify-content:center">✨ Tái sử dụng</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function showTemplateDetail(t){
+  const aId='tpl-detail-modal';
+  let area=document.getElementById(aId);
+  if(!area){area=document.createElement('div');area.id=aId;area.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px';document.body.appendChild(area)}
+  const sc=t.template_schema||{};
+  const layers=Array.isArray(sc.layers)?sc.layers:[];
+  const defaults=sc.defaults||{};
+  area.innerHTML=`
+    <div class="card" style="max-width:700px;width:100%;max-height:80vh;overflow-y:auto;position:relative">
+      <button class="btn btn-sm" style="position:absolute;top:12px;right:12px" onclick="document.getElementById('${aId}').style.display='none'">✕ Đóng</button>
+      <h2 class="mb12">${esc(t.title)}</h2>
+      <div class="g2 mb12">
+        <div><span class="xs mu">ID</span><div class="bold">${t.id}</div></div>
+        <div><span class="xs mu">Danh mục</span><div class="bold">${esc(t.category)}</div></div>
+        <div><span class="xs mu">Trạng thái</span><div class="bold">${esc(t.status)}</div></div>
+        <div><span class="xs mu">Lượt dùng</span><div class="bold">${t.usage_count}</div></div>
+        <div><span class="xs mu">Người tạo</span><div class="bold">${t.creator_id}</div></div>
+        <div><span class="xs mu">Ngày tạo</span><div class="bold">${fmtD(t.created_at)}</div></div>
+      </div>
+      ${t.base_video_url?`<div class="field mb12"><label>Video mẫu (base)</label><video controls src="${esc(t.base_video_url)}" style="max-height:200px;border-radius:8px;background:#000;display:block"></video></div>`:''}
+      ${t.thumbnail_url?`<div class="field mb12"><label>Ảnh thu nhỏ</label><img src="${esc(t.thumbnail_url)}" style="max-height:120px;border-radius:8px"></div>`:''}
+      ${t.preview_video_url?`<div class="field mb12"><label>Video xem trước</label><video controls src="${esc(t.preview_video_url)}" style="max-height:200px;border-radius:8px;background:#000;display:block"></video></div>`:''}
+      <div class="field mb12"><label>Template Schema (JSON)</label><pre style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:12px;font-size:11px;overflow-x:auto;max-height:300px">${esc(JSON.stringify(sc,null,2))}</pre></div>
+      ${layers.length?`<div class="field mb12"><label>Layers (${layers.length})</label>${layers.map(l=>`<div class="card-sm mb4 xs"><b>${esc(l.id)}</b> - ${esc(l.type)} ${l.default?'(default: '+esc(String(l.default).slice(0,50))+')':''}</div>`).join('')}</div>`:''}
+      ${Object.keys(defaults).length?`<div class="field mb12"><label>Defaults</label><pre style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:12px;font-size:11px">${esc(JSON.stringify(defaults,null,2))}</pre></div>`:''}
+      ${t.source_generation_id?`<div class="xs mu">Tạo từ generation #${t.source_generation_id}</div>`:''}
+    </div>`;
+  area.style.display='flex';
+}
+
+function bindUse(ts,aId,prefilledInputs=null,prefilledTitle='',prefilledCat='Mặc định'){
+  $$('[data-detail]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const t=ts.find(x=>x.id==b.dataset.detail);
+    if(t)showTemplateDetail(t);
+  });
+  $$('[data-use]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const t=ts.find(x=>x.id==b.dataset.use);
+    if(t)openGen(t,aId,prefilledInputs,prefilledTitle,prefilledCat);
+  });
+}
+
+async function openGen(t,aId,prefInputs=null,prefTitle='',prefCat='Mặc định'){
+  const area=$('#'+aId);
+  if(!area)return;
+  area.scrollIntoView({behavior:'smooth'});
+  area.innerHTML=`<div class="card su"><div class="spin"></div> Đang mở template...</div>`;
+  const isAI=(t.template_schema||{}).ai_video;
+  if(isAI)renderAIForm(t,aId,prefInputs,prefTitle,prefCat);
+  else renderFastForm(t,aId,prefInputs,prefTitle,prefCat);
+}
+
+async function renderAIForm(t,aId,prefInputs=null,prefTitle='',prefCat='Mặc định'){
+  const area=$('#'+aId);
+  const pr=await api('/api/pricing');
+  const sc=t.template_schema||{},dance=bool(sc.dance);
+  const dfl=prefInputs||sc.defaults||{};
+
+  area.innerHTML=`<div class="card su mt12">
+    <div class="row mb16">
+      <span style="font-size:22px">🤖</span>
+      <div>
+        <h3 style="margin:0">${esc(t.title)}</h3>
+        <div class="xs mu">Model tạo video: <b>MiniMax-H3</b> · Tái tạo theo template</div>
+      </div>
+      <button class="btn btn-sm mla" onclick="$('#${aId}').innerHTML=''">✕ Đóng</button>
+    </div>
+
+    <div class="g2">
+      <div class="field">
+        <label>Tên thành phẩm / Dự án</label>
+        <input id="ai-title" value="${esc(prefTitle||t.title)}" placeholder="Đặt tên để dễ tìm kiếm lại">
+      </div>
+      <div class="field">
+        <label>Danh mục lưu trữ của bạn</label>
+        <input id="ai-cat" value="${esc(prefCat||'Mặc định')}" placeholder="Ví dụ: Thời trang, Bất động sản, Review...">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Mô tả video (Prompt tiếng Anh hoặc tiếng Việt)</label>
+      <textarea id="ai-pr" rows="3" placeholder="A stunning cinematic shot...">${esc(dfl.prompt||'')}</textarea>
+    </div>
+
+    <div class="g3">
+      <div class="field">
+        <label>Thời lượng (giây)</label>
+        <select id="ai-d">
+          ${[5,6,7,8,9,10].map(s=>`<option value="${s}" ${s===(dfl.duration||5)?'selected':''}>${s} giây</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>Tỉ lệ khung hình</label>
+        <select id="ai-r">
+          ${(pr.ratios||['16:9','9:16','1:1']).map(r=>`<option value="${r}" ${r===(dfl.ratio||'9:16')?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>Độ phân giải</label>
+        <select id="ai-re">
+          ${(pr.resolutions||['768P']).map(r=>`<option value="${r}" ${r===(dfl.resolution||'768P')?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+
+    ${dance?`
+      <div class="g2">
+        <div class="field"><label>👤 Ảnh nhân vật (Character)</label><input type="file" id="ai-ch" accept="image/*"></div>
+        <div class="field"><label>🕺 Video chuyển động mẫu (tuỳ chọn)</label><input type="file" id="ai-rv" accept="video/*"></div>
+      </div>`:
+      `<div class="field"><label>🖼 Ảnh khung hình đầu (First frame — tuỳ chọn)</label><input type="file" id="ai-ff" accept="image/*"></div>`}
+
+    <div class="card-sm mb12" style="background:var(--bg3);border:1px solid rgba(99,102,241,0.25)">
+      <div class="row"><span class="bold">Chi phí dự kiến:</span><span class="mla ok bold" id="ai-cp">...</span></div>
+      <div class="xs mu mt4">Tính theo giá: ${pr.h3_768p} credit/giây (768P), ${pr.h3_2k} credit/giây (2K)</div>
+    </div>
+
+    <div class="row gap-8">
+      <button class="btn btn-p" id="ai-go">🚀 Bắt đầu tạo video</button>
+      <button class="btn" onclick="$('#${aId}').innerHTML=''">Huỷ</button>
+    </div>
+    <div id="ai-res" class="mt16"></div>
+  </div>`;
+
+  const upCost=()=>{
+    const d=+$('#ai-d').value,res=$('#ai-re').value;
+    const rate=res==='2K'?pr.h3_2k:pr.h3_768p;
+    const base=d*rate;
+    const extra=dance?pr.heavy:0;
+    $('#ai-cp').textContent=`${(base+extra).toFixed(2)} credit`;
+  };
+  $('#ai-d').onchange=upCost;$('#ai-re').onchange=upCost;upCost();
+
+  $('#ai-go').onclick=async()=>{
+    const btn=$('#ai-go');
+    try{
+      btn.disabled=true;btn.innerHTML='<div class="spin"></div> Đang gửi request...';
+      const input={prompt:$('#ai-pr').value,duration:+$('#ai-d').value,ratio:$('#ai-r').value,resolution:$('#ai-re').value};
+      if(dance){
+        const cf=$('#ai-ch')?.files[0];if(cf)input.character_image=await upload(cf);
+        const rf=$('#ai-rv')?.files[0];if(rf)input.reference_video=await upload(rf);
+      }else{
+        const ff=$('#ai-ff')?.files[0];if(ff)input.first_frame_image=await upload(ff);
+      }
+      const g=await post('/api/generate',{
+        template_id:t.id,
+        input_data:input,
+        title:$('#ai-title').value,
+        user_category:$('#ai-cat').value,
+        share_to_library:true
+      });
+      tok(`Đã tạo yêu cầu — trừ ${g.credits_cost} credit`);
+      await refreshMe();trackGen(g.id,'ai-res');
+    }catch(e){ter(e.message);btn.disabled=false;btn.innerHTML='🚀 Bắt đầu tạo video'}
+  };
+}
+
+async function renderFastForm(t,aId,prefInputs=null,prefTitle='',prefCat='Mặc định'){
+  const area=$('#'+aId);
+  const pr=await api('/api/pricing');
+  const sc=t.template_schema||{},layers=sc.layers||[],dfl=prefInputs||sc.defaults||{};
+  const fields=layers.map(l=>l.type==='text'
+    ?`<div class="field"><label>${esc(l.id)} (chữ)</label><input data-f="${esc(l.id)}" value="${esc(dfl[l.id]||l.default||'')}"></div>`
+    :`<div class="field"><label>${esc(l.id)} (${l.type})</label><input type="file" accept="image/*" data-img="${esc(l.id)}"></div>`).join('');
+  const motion=sc.motion_transfer?`<div class="field"><label>🧑 Ảnh nhân vật</label><input type="file" accept="image/*" data-img="character_image"></div>`:'';
+
+  area.innerHTML=`<div class="card su mt12">
+    <div class="row mb16">
+      <span style="font-size:20px">⚡</span>
+      <h3 style="margin:0">${esc(t.title)}</h3>
+      <button class="btn btn-sm mla" onclick="$('#${aId}').innerHTML=''">✕ Đóng</button>
+    </div>
+
+    <div class="g2">
+      <div class="field"><label>Tên thành phẩm / Dự án</label><input id="fast-title" value="${esc(prefTitle||t.title)}"></div>
+      <div class="field"><label>Danh mục lưu trữ</label><input id="fast-cat" value="${esc(prefCat||'Mặc định')}"></div>
+    </div>
+
+    ${fields}${motion}
+    <div class="field"><label>Luồng render</label>
+      <select id="rt">
+        <option value="auto">🤖 Tự động (AI chọn luồng phù hợp)</option>
+        <option value="fast_remotion">⚡ Nhanh (FFmpeg)</option>
+        <option value="heavy_mimicmotion">🔥 Nâng cao (GPU Motion Transfer)</option>
+      </select>
+    </div>
+    <div class="card-sm mb12" style="background:var(--bg3)"><div id="cp" class="sm bold"></div></div>
+    <div class="row gap-8">
+      <button class="btn btn-p" id="fast-go">🚀 Bắt đầu tạo video</button>
+      <button class="btn" onclick="$('#${aId}').innerHTML=''">Huỷ</button>
+    </div>
+    <div id="fast-res" class="mt16"></div>
+  </div>`;
+
+  const upCost=()=>{
+    const v=$('#rt').value;
+    const txt=v==='fast_remotion'?`⚡ ${pr.fast} credit`
+      :v==='heavy_mimicmotion'?`🔥 ${pr.heavy} credit`
+      :`🤖 ${pr.fast}–${pr.heavy} credit`;
+    $('#cp').innerHTML='💳 Chi phí: '+txt;
+  };
+  $('#rt').onchange=upCost;upCost();
+
+  $('#fast-go').onclick=async()=>{
+    const btn=$('#fast-go');
+    try{
+      btn.disabled=true;btn.innerHTML='<div class="spin"></div> Đang gửi...';
+      const input={...dfl};
+      $$('[data-f]').forEach(i=>input[i.dataset.f]=i.value);
+      for(const i of $$('[data-img]'))if(i.files[0])input[i.dataset.img]=await upload(i.files[0]);
+      const g=await post('/api/generate',{
+        template_id:t.id,
+        render_type:$('#rt').value,
+        input_data:input,
+        title:$('#fast-title').value,
+        user_category:$('#fast-cat').value,
+        share_to_library:true
+      });
+      tok(`Đã gửi (${g.render_type}) — trừ ${g.credits_cost} credit`);
+      await refreshMe();trackGen(g.id,'fast-res');
+    }catch(e){ter(e.message);btn.disabled=false;btn.innerHTML='🚀 Bắt đầu tạo video'}
+  };
+}
+
+function bool(val){return val===true||val==='true'||val===1}
+
+/* ─────────── 2. TEMPLATE CỦA TÔI (LƯU TỪNG THÀNH PHẨM THEO DANH MỤC, TÁI SỬ DỤNG) ─────────── */
+async function pgMyTemplates(activeCat='Tất cả'){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    const [allGenerations,cats,templates]=await Promise.all([
+      api('/api/generations'),
+      api('/api/generations/categories'),
+      api('/api/templates')
+    ]);
+
+    const categories=['Tất cả',...cats.filter(c=>c!=='Tất cả')];
+    const filtered=activeCat==='Tất cả'?allGenerations:allGenerations.filter(g=>(g.user_category||'Mặc định')===activeCat);
+
+    pc.innerHTML=`
+      <div class="sec">
+        <div>
+          <div class="ptitle">📁 Template của tôi</div>
+          <div class="pdesc">Lưu trữ từng thành phẩm bạn đã làm, phân chia theo danh mục. Click để dùng lại hoặc chỉnh sửa tạo video mới.</div>
+        </div>
+        <button class="btn btn-sm" onclick="pgMyTemplates('${activeCat}')">🔄 Làm mới</button>
+      </div>
+
+      <!-- Danh mục Tabs -->
+      <div class="cat-pills">
+        ${categories.map(c=>`<button class="cat-pill ${c===activeCat?'on':''}" data-cat="${esc(c)}">${esc(c)} (${c==='Tất cả'?allGenerations.length:allGenerations.filter(x=>(x.user_category||'Mặc định')===c).length})</button>`).join('')}
+      </div>
+
+      ${filtered.length?`
+        <div class="ga">
+          ${filtered.map(g=>`
+            <div class="tc" id="card-${g.id}">
+              <div class="tc-med">
+                ${g.output_video_url?`<video muted loop preload="none" style="width:100%;height:100%;object-fit:cover" src="${esc(g.output_video_url)}" onmouseenter="this.play()" onmouseleave="this.pause()"></video>`:`<div style="font-size:32px;opacity:.2">🎬</div>`}
+                <div class="tc-over"><div class="play-ic">▶</div></div>
+              </div>
+              <div class="tc-body">
+                <div class="row mb4 gap-6">
+                  <span class="badge b-ac">${esc(g.user_category||'Mặc định')}</span>
+                  <span class="badge ${g.status==='success'?'b-ok':'b-mu'}">${g.status==='success'?'Hoàn thành':g.status}</span>
+                </div>
+                <div class="tc-title">${esc(g.title||'Thành phẩm #'+g.id)}</div>
+                <div class="xs mu mb8">${fmtD(g.created_at)} · 💳 ${g.credits_cost} credit</div>
+
+                <div class="row gap-6 mt-auto">
+                  <button class="btn btn-p btn-sm" data-reuse="${g.id}" style="flex:1;justify-content:center">🔁 Sửa & Dùng lại</button>
+                  <button class="btn btn-sm" data-edit="${g.id}" title="Đổi tên/danh mục">✏️</button>
+                  ${g.output_video_url?`<a href="${esc(g.output_video_url)}" download class="btn btn-sm" title="Tải video">⬇</a>`:''}
+                </div>
+              </div>
+            </div>`).join('')}
+        </div>`:
+        `<div class="empty">
+          <div class="empty-ic">📂</div>
+          <div style="font-size:14px;font-weight:600;color:var(--tx2)">Chưa có thành phẩm nào trong danh mục này</div>
+          <div class="sm mu">Hãy tạo video từ Thư viện hoặc Trợ lý AI để lưu vào đây!</div>
+        </div>`}
+
+      <div id="my-gen-area" class="mt24"></div>`;
+
+    // Bind category clicks
+    $$('[data-cat]').forEach(b=>b.onclick=()=>pgMyTemplates(b.dataset.cat));
+
+    // Bind Reuse click
+    $$('[data-reuse]').forEach(b=>b.onclick=()=>{
+      const gid=+b.dataset.reuse;
+      const gen=allGenerations.find(x=>x.id===gid);
+      if(!gen)return;
+      const tpl=templates.find(x=>x.id===gen.template_id)||{id:gen.template_id,title:gen.title,template_schema:{ai_video:gen.render_type.startsWith('ai')}};
+      openGen(tpl,'my-gen-area',gen.input_data,gen.title,gen.user_category);
+    });
+
+    // Bind Edit title/category
+    $$('[data-edit]').forEach(b=>b.onclick=async()=>{
+      const gid=+b.dataset.edit;
+      const gen=allGenerations.find(x=>x.id===gid);
+      if(!gen)return;
+      const newTitle=prompt('Nhập tên mới cho thành phẩm:',gen.title||'');
+      if(newTitle===null)return;
+      const newCat=prompt('Nhập danh mục lưu trữ mới:',gen.user_category||'Mặc định');
+      if(newCat===null)return;
+      try{
+        await patch('/api/generations/'+gid,{title:newTitle,user_category:newCat});
+        tok('Đã cập nhật danh mục & tên!');
+        pgMyTemplates(activeCat);
+      }catch(e){ter(e.message)}
+    });
+
+  }catch(e){pc.innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+/* ─────────── 3. TRỢ LÝ AI (LUỒNG GEN VIDEO 5 BƯỚC HOÀN CHỈNH) ─────────── */
+async function pgAI(){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    const [m,imgModels,pricingData]=await Promise.all([
+      api('/api/ai/models'),
+      api('/api/assistant/check-image-models'),
+      api('/api/pricing')
+    ]);
+
+    // Model options displaying explicit CREDIT PRICE (Requirement 7)
+    const mkO=(grp,def)=>m.models.filter(x=>x.group===grp||x.step===grp).map(x=>
+      `<option value="${esc(x.id)}" ${x.enabled?'':'disabled'} ${x.id===def?'selected':''}>${x.enabled?(x.price>0?x.price+' credit — ':'Free — '):'🔴 Tắt — '}${esc(x.name)}</option>`).join('');
+
+    pc.innerHTML=`
+      <div class="sec">
+        <div>
+          <div class="ptitle">🤖 Trợ lý AI Sản xuất Video Hoàn chỉnh</div>
+          <div class="pdesc">Luồng 5 bước khép kín: Ý tưởng ➔ Phân tích & Kịch bản ➔ Soát lỗi & Gợi ý ➔ Chọn / Sinh ảnh nhân vật ➔ Tạo Video & Bảng kết quả</div>
+        </div>
+      </div>
+
+      <!-- AUTO PIPELINE: 1 click tự động -->
+<div class="card mb24" style="border:2px solid rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.05))">
+  <div class="row mb12">
+    <span class="step-num" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">⚡</span>
+    <h3 style="margin:0">Pipeline tự động (1 click)</h3>
+    <span class="xs mu mla">Chọn model mỗi giai đoạn → nhập ý tưởng → tool làm hết</span>
+  </div>
+  <div class="g3 mb12">
+    <div class="field">
+      <label>Model LLM (kịch bản)</label>
+      <select id="ap-llm">${mkO('llm',m.default_script)}</select>
+    </div>
+    <div class="field">
+      <label>Model ảnh (keyframe)</label>
+      <select id="ap-img">${mkO('image_generate',m.default_vision||m.default_script)}</select>
+    </div>
+    <div class="field">
+      <label>Model video</label>
+      <select id="ap-video">${mkO('video_i2v','wan2.1')}</select>
+    </div>
+  </div>
+  <div class="field">
+    <label>Ý tưởng video (độ dài, chủ đề, nhân vật, phong cách)</label>
+    <textarea id="ap-idea" rows="3" placeholder="Ví dụ: Video 60 giây chủ đề nấu ăn, nhân vật nữ trẻ, phong cách điện ảnh..."></textarea>
+  </div>
+  <div class="g2 mb12">
+    <div class="field">
+      <label>Thời lượng (giây)</label>
+      <select id="ap-dur">
+        <option value="30">30 giây</option>
+        <option value="60" selected>60 giây</option>
+        <option value="90">90 giây</option>
+        <option value="120">120 giây</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Tỉ lệ khung hình</label>
+      <select id="ap-ratio">
+        <option value="9:16" selected>9:16 (TikTok, Reels)</option>
+        <option value="16:9">16:9 (YouTube ngang)</option>
+        <option value="1:1">1:1 (Vuông)</option>
+      </select>
+    </div>
+  </div>
+  <div class="field" style="display:flex;align-items:center;gap:8px;margin:8px 0;">
+    <input type="checkbox" id="ap-use-kaggle" style="width:18px;height:18px">
+    <label style="margin:0;font-size:13px">Chạy trên Kaggle GPU (miễn phí, cần worker đang chạy trên Kaggle)</label>
+  </div>
+  <button class="btn btn-p" id="btn-ap-start" style="padding:12px 24px;font-size:15px">⚡ Bắt đầu Pipeline tự động</button>
+  <div id="ap-progress" class="mt16"></div>
+</div>
+
+<!-- Side-by-side preview panel -->
+<div id="ap-preview" class="hide mt24">
+  <div class="g2" style="align-items:start">
+    <div class="card">
+      <h3 class="mb12">📊 Tiến độ pipeline</h3>
+      <div id="ap-stages" class="mb12"></div>
+      <div class="pb mb8"><div class="pf" id="ap-bar" style="width:0%"></div></div>
+      <div class="xs mu" id="ap-step-text"></div>
+    </div>
+    <div class="card">
+      <h3 class="mb12">👁️ Preview kết quả</h3>
+      <div id="ap-preview-content" style="max-height:500px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOCAL PIPELINE: VLM + FLUX + Wan2.1 -->
+      <div class="card mb24" style="border:2px solid rgba(34,211,160,0.3);background:rgba(34,211,160,0.05)">
+        <div class="row mb12">
+          <span class="step-num" style="background:linear-gradient(135deg,#22d3a0,#10b981)">LP</span>
+          <h3 style="margin:0">Pipeline Local (Zero API cost)</h3>
+          <span class="xs mu mla">Chay hoan toan local: Qwen2-VL + FLUX.1-schnell + Wan2.1</span>
+        </div>
+        <div class="pdesc mb12">Yeu cau phan cung: GPU 8GB+ VRAM. Hien tai: 4GB VRAM - chi chay duoc model nho voi quantization.</div>
+        <div class="field">
+          <label>Upload anh dau vao</label>
+          <input type="file" id="lp-ff" accept="image/*">
+          <div id="lp-ff-prev" class="mt8"></div>
+        </div>
+        <div class="field">
+          <label>Huong dan bo sung (tuy chon)</label>
+          <textarea id="lp-instruction" rows="2" placeholder="Mo ta phong cach, chi tiet them..."></textarea>
+        </div>
+        <div class="g3 mb12">
+          <div class="field">
+            <label>Che do</label>
+            <select id="lp-mode">
+              <option value="recreate" selected>Tao anh moi tu prompt</option>
+              <option value="animate">Animate anh goc</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Thoi luong (giay)</label>
+            <select id="lp-dur">
+              <option value="5" selected>5 giay</option>
+              <option value="10">10 giay</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-p" id="btn-lp-start" style="padding:12px 24px;font-size:15px">Bat dau Pipeline Local</button>
+        <div id="lp-check" class="mt16"></div>
+        <div id="lp-progress" class="mt16"></div>
+        <div id="lp-result" class="mt16"></div>
+      </div>
+
+
+      </div>`;
+
+    // Populate pipeline model selects from assistant models API
+    setTimeout(async function() {
+      const steps = [
+        { el: 'ap-llm', step: 'llm', def: 'deepseek-v4-pro-0813' },
+        { el: 'ap-img', step: 'image_generate', def: 'deepseek-v4-flash-vision' },
+        { el: 'ap-video', step: 'video_i2v', def: 'wan2.1' },
+      ];
+      for (const s of steps) {
+        const sel = document.getElementById(s.el);
+        if (!sel) continue;
+        try {
+          const res = await api('/api/assistant/models?step=' + s.step);
+          const models = res.models || [];
+          sel.innerHTML = '';
+          models.forEach(function(m) {
+            const opt = document.createElement('option');
+            opt.value = m.id;
+            const priceLabel = m.price_label || (m.price > 0 ? m.price + ' credit - ' : 'Free - ') + m.name;
+            opt.textContent = priceLabel;
+            opt.selected = (m.id === s.def);
+            sel.appendChild(opt);
+          });
+        } catch(e) {
+          sel.innerHTML = '<option value="">Lỗi tải model: ' + esc(e.message) + '</option>';
+        }
+      }
+    }, 100);
+    const btnLpStart = document.getElementById('btn-lp-start');
+    if (btnLpStart) {
+      btnLpStart.onclick = async function() {
+        const btn = btnLpStart;
+        const progressArea = document.getElementById('lp-progress');
+        const resultArea = document.getElementById('lp-result');
+        const checkArea = document.getElementById('lp-check');
+        try {
+          btn.disabled = true; btn.innerHTML = '<div class="spin"></div> Dang khoi dong...';
+          progressArea.innerHTML = '<div class="card-sm" style="background:var(--warn2)"><span class="warn">Dang kiem tra phan cung...</span></div>';
+          const check = await api('/api/assistant/local-pipeline/check');
+          if (checkArea) {
+            checkArea.innerHTML = '<div class="card-sm"><span class="xs mu">VRAM: ' + check.vram_gb.toFixed(1) + ' GB | ' + (check.has_gpu ? 'GPU co san' : 'Khong co GPU') + '</span></div>';
+          }
+          const file = document.getElementById('lp-ff').files[0];
+          if (!file) { ter('Vui long chon anh dau vao'); return }
+          const url = await upload(file);
+          progressArea.innerHTML = '<div class="card-sm" style="background:var(--warn2)"><span class="warn">Dang chay pipeline local... (co the mat 5-10 phut)</span></div>';
+          const res = await post('/api/assistant/local-pipeline', {
+            image_url: url,
+            user_instruction: document.getElementById('lp-instruction').value.trim(),
+            mode: document.getElementById('lp-mode').value,
+            duration: +document.getElementById('lp-dur').value,
+          });
+          progressArea.innerHTML = '<div class="card-sm" style="background:var(--ok2);border:1px solid rgba(34,211,160,.3)"><span class="ok bold">' + esc(res.message || 'Hoan tat') + '</span></div>';
+          const rr = res.result || {};
+          let rh = '';
+          if (rr.image_prompt) rh += '<div class="card-sm mb8"><b>Prompt anh:</b> ' + esc(rr.image_prompt) + '</div>';
+          if (rr.motion_prompt) rh += '<div class="card-sm mb8"><b>Prompt video:</b> ' + esc(rr.motion_prompt) + '</div>';
+          if (rr.image_url) rh += '<div class="mb8"><img src="' + esc(rr.image_url) + '" style="max-width:100%;border-radius:8px"></div>';
+          if (rr.video_url) rh += '<div class="mb8"><video controls src="' + esc(rr.video_url) + '" style="max-width:100%;border-radius:8px;background:#000"></video></div>';
+          if (rr.warnings && rr.warnings.length) rh += '<div class="xs mu">Canh bao: ' + esc(rr.warnings.join('; ')) + '</div>';
+          resultArea.innerHTML = rh || '<div class="card-sm">Khong co ket qua.</div>';
+          tok('Pipeline local hoan tat!');
+        } catch(e) {
+          progressArea.innerHTML = '<div class="card-sm" style="background:var(--er2)"><span class="er">' + esc(e.message) + '</span></div>';
+          ter(e.message);
+        } finally {
+          btn.disabled = false; btn.innerHTML = 'Bat dau Pipeline Local';
+        }
+      };
+    }
+
+
+
+    let currentSelectedCharUrl='';
+    let chosenPromptModel='';
+
+    const btnApStart = document.getElementById('btn-ap-start');
+    if (btnApStart) {
+      btnApStart.onclick = async function() {
+        const idea = document.getElementById('ap-idea').value.trim();
+        if (!idea) { ter('Vui long nhap y tuong video'); return }
+        const btn = btnApStart;
+        const progressArea = document.getElementById('ap-progress');
+        const previewPanel = document.getElementById('ap-preview');
+        const stagesArea = document.getElementById('ap-stages');
+        const progressBar = document.getElementById('ap-bar');
+        const stepText = document.getElementById('ap-step-text');
+        const previewContent = document.getElementById('ap-preview-content');
+        const useKaggle = document.getElementById('ap-use-kaggle').checked;
+        try {
+          btn.disabled = true; btn.innerHTML = '<div class="spin"></div> Dang chay pipeline... (co the mat vai phut)';
+          progressArea.innerHTML = '<div class="card-sm" style="background:var(--warn2)"><span class="warn">Pipeline dang chay: prompt -> anh -> video. Moi buoc can load model AI, hay doi...</span></div>';
+          previewPanel.classList.remove('hide');
+          stagesArea.innerHTML = '<div class="card-sm"><span class="bold">Dang chay pipeline</span></div>';
+          previewContent.innerHTML = '';
+          progressBar.style.width = '10%';
+          stepText.textContent = 'Dang khoi tao pipeline...';
+
+          if (useKaggle) {
+            const sub = await post('/api/assistant/remote-pipeline/submit', {
+              idea: idea,
+              duration: +document.getElementById('ap-dur').value,
+              mode: 'recreate',
+              user_instruction: idea,
+            });
+            const jobId = sub.job_id;
+            stepText.textContent = 'Dang gui sang Kaggle GPU...';
+            stagesArea.innerHTML = '<div class="card-sm">Job da tien toi hang doi Kaggle: <b>' + esc(jobId) + '</b></div>';
+
+            for (let ii = 0; ii < 180; ii++) {
+              await new Promise(r => setTimeout(r, 2000));
+              const st = await api('/api/assistant/remote-pipeline/jobs/' + jobId + '/status');
+              progressBar.style.width = st.progress + '%';
+              stepText.textContent = st.step || st.status;
+              stagesArea.innerHTML = '<div class="card-sm"><span class="bold">' + esc(st.status) + '</span> - ' + (st.step || '') + '</div>';
+
+              if (st.status === 'done') {
+                progressBar.style.width = '100%';
+                stepText.textContent = 'Hoan tat!';
+                stagesArea.innerHTML = '<div class="card-sm" style="background:var(--ok2);border:1px solid rgba(34,211,160,.3)"><span class="ok bold">Kaggle GPU hoan tat!</span></div>';
+                const r = st.result || {};
+                let html = '';
+                if (r.video_url) html += '<div class="mb8"><b>Video ket qua (Kaggle):</b><br><video controls src="' + esc(r.video_url) + '" style="max-width:100%;border-radius:8px;background:#000"></video></div>';
+                if (r.image_url) html += '<div class="mb8"><b>Anh ket qua:</b><br><img src="' + esc(r.image_url) + '" style="max-width:100%;border-radius:8px"></div>';
+                if (r.error) html += '<div class="xs mu">Canh bao: ' + esc(r.error) + '</div>';
+                previewContent.innerHTML = html || '<div class="card-sm">Hoan tat nhung khong co file ket qua.</div>';
+                tok('Pipeline Kaggle hoan tat!');
+                break;
+              }
+              if (st.status === 'failed') {
+                progressBar.style.width = '0%';
+                stepText.textContent = 'Loi';
+                stagesArea.innerHTML = '<div class="card-sm" style="background:var(--er2)"><span class="er">Loi: ' + esc(st.error || 'Loi khong xac dinh') + '</span></div>';
+                ter('Pipeline Kaggle that bai: ' + esc(st.error || ''));
+                break;
+              }
+            }
+            if (btn.disabled) {
+              stepText.textContent = 'Het han cho';
+              ter('Het han cho Kaggle xu ly (6 phut). Vui long thu lai.');
+            }
+          } else {
+            const res = await post('/api/assistant/local-pipeline', {
+              idea: idea,
+              duration: +document.getElementById('ap-dur').value,
+              user_instruction: idea,
+              mode: 'recreate',
+            });
+            progressBar.style.width = '100%';
+            stepText.textContent = 'Hoan tat!';
+            stagesArea.innerHTML = '<div class="card-sm" style="background:var(--ok2);border:1px solid rgba(34,211,160,.3)"><span class="ok bold">' + esc(res.message || 'Hoan tat') + '</span></div>';
+            const r = res.result || {};
+            let html = '';
+            if (r.image_prompt) html += '<div class="card-sm mb8"><b>Prompt anh:</b> ' + esc(r.image_prompt) + '</div>';
+            if (r.motion_prompt) html += '<div class="card-sm mb8"><b>Prompt video:</b> ' + esc(r.motion_prompt) + '</div>';
+            if (r.image_url) html += '<div class="mb8"><b>Anh ket qua:</b><br><img src="' + esc(r.image_url) + '" style="max-width:100%;border-radius:8px"></div>';
+            if (r.video_url) html += '<div class="mb8"><b>Video ket qua:</b><br><video controls src="' + esc(r.video_url) + '" style="max-width:100%;border-radius:8px;background:#000"></video></div>';
+            if (r.warnings && r.warnings.length) html += '<div class="xs mu">Canh bao: ' + esc(r.warnings.join('; ')) + '</div>';
+            previewContent.innerHTML = html || '<div class="card-sm">Pipeline tra ve ket qua rong. Kiem tra console server.</div>';
+            tok('Pipeline hoan tat!');
+          }
+        } catch(e) {
+          progressBar.style.width = '0%';
+          stepText.textContent = 'Loi';
+          stagesArea.innerHTML = '<div class="card-sm" style="background:var(--er2)"><span class="er">Loi: ' + esc(e.message) + '</span></div>';
+          ter(e.message);
+        } finally {
+          btn.disabled = false; btn.innerHTML = '⚡ Bắt đầu Pipeline tự động';
+        }
+      };
+    }
+
+  }catch(e){pc.innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+/* ─────────── 4. TẢI VIDEO MẠNG XÃ HỘI (TÍNH NĂNG ĐỘC LẬP) ─────────── */
+async function pgDownload(){
+  const pc=$('#page');
+  pc.innerHTML=`
+    <div style="width:80%;margin:0 auto;max-width:1400px" id="dl-page-wrap">
+    <div class="sec">
+      <div>
+        <div class="ptitle">📥 Tải Video Mạng Xã Hội</div>
+        <div class="pdesc">Tải video không logo/watermark từ TikTok, Douyin, YouTube, Facebook Reels, Instagram... về máy chủ và thiết bị của bạn.</div>
+      </div>
+    </div>
+
+    <div class="card mb20">
+      <h3>🔗 Nhập liên kết</h3>
+      <div class="pdesc mb14">Dán link 1 video để tải luôn, hoặc link kênh/trang/playlist để lấy toàn bộ video, ảnh kèm lượt like và bình luận.</div>
+      <div class="field">
+        <label>Đường dẫn</label>
+        <div class="row gap-8">
+          <input id="dl-url" placeholder="https://www.tiktok.com/@... hoặc https://www.youtube.com/@... hoặc https://www.youtube.com/playlist?list=...">
+          <button class="btn btn-p" id="btn-dl-resolve" style="flex-shrink:0;padding:9px 18px">🔍 Xem danh sách kênh</button>
+          <button class="btn btn-ok" id="btn-dl-one" style="flex-shrink:0;padding:9px 18px">📥 Tải ngay 1 video</button>
+        </div>
+      </div>
+
+      <!-- Danh sách video/ảnh từ kênh/trang (hiện sau khi bấm Xem danh sách) -->
+      <div id="dl-list-wrap" class="mt20" style="display:none">
+        <h3>📺 Danh sách video / ảnh</h3>
+        <div class="row mb8 gap-8" style="align-items:center;flex-wrap:wrap">
+          <span class="xs mu">Tất cả: <b id="dl-total">0</b> mục</span>
+          <button class="btn btn-sm btn-p" id="btn-dl-select-all" style="flex-shrink:0">✅ Chọn tất cả</button>
+          <button class="btn btn-sm btn-ok" id="btn-dl-select-none" style="flex-shrink:0">❌ Bỏ chọn</button>
+          <div id="dl-progress-wrap" style="flex:1;min-width:200px;display:none;margin:0 8px">
+            <div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;border:1px solid var(--bd)">
+              <div id="dl-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .3s"></div>
+            </div>
+            <div class="xs mu mt4" id="dl-progress-text">0%</div>
+          </div>
+          <button class="btn btn-p" id="btn-dl-batch" style="flex-shrink:0;padding:9px 18px;margin-left:auto">📥 Tải các mục đã chọn</button>
+        </div>
+        <div class="quality-hint xs mu mb12">Chất lượng: <b>best</b> = cao nhất có sẵn · <b>1080/720/480</b> = giới hạn độ phân cực · <b>audio</b> = chỉ tải âm thanh</div>
+        <div id="dl-list" class="ga" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px"></div>
+      </div>
+
+      <!-- Kết quả tải batch -->
+      <div id="dl-batch-result" class="mt20"></div>
+
+      <div id="dl-preview" class="mt16"></div>
+    </div>
+
+    <div class="card">
+      <h3>💡 Hướng dẫn & Lưu ý</h3>
+      <ul style="padding-left:18px;font-size:13px;line-height:1.7;color:var(--tx2);margin-top:8px">
+        <li>Video TikTok và Douyin được tự động bóc tách sạch sẽ, <b>không chứa watermark hay logo mờ</b>.</li>
+        <li>Khi dán link kênh/trang, hãy bấm <b>"🔍 Xem danh sách kênh"</b> để tool quét toàn bộ video, ảnh rồi bạn chọn muốn tải cái nào.</li>
+        <li>Sau khi tải về, bạn có thể tải thẳng về máy tính hoặc chuyển sang tính năng <b>"🎙️ Dịch & Thêm Phụ đề"</b> để chèn Vietsub.</li>
+        <li>Tất cả lượt tải video đều được lưu lại an toàn trong <b>Nhật ký tài khoản</b>.</li>
+      </ul>
+    </div>
+    </div>`;
+
+  // ---------- Xem trước trực tiếp trên thẻ ----------
+  let dlItems = [];
+  async function togglePreview(idx){
+    const media=$('#dl-media-'+idx);
+    if(media.dataset.loaded==='1') return; // đã đang chơi video, không làm gì
+    const it=dlItems[idx];
+    try{
+      const r=await api('/api/video/preview?url='+encodeURIComponent(it.url));
+      if(r.video_url){
+        const thumb = media.querySelector('img');
+        const fb = media.querySelector('.dl-thumb-fb');
+        const dur = media.querySelector('div[style*="rgba(0,0,0,.75)"]');
+        const box = media.querySelector('div[style*="rgba(0,0,0,.6)"]');
+        const play = media.querySelector('div[style*="rgba(0,0,0,.7)"][style*="32px"]');
+        media.innerHTML=`<video class="dl-video" controls style="width:100%;height:100%;object-fit:cover;background:#000;display:block" src="${esc(r.video_url)}"></video>`;
+        if(thumb) { thumb.style.display='none'; media.prepend(thumb); }
+        if(fb) { fb.style.display='none'; media.appendChild(fb); }
+        if(dur) media.appendChild(dur);
+        if(box) media.appendChild(box);
+        if(play) { media.appendChild(play); play.style.display='none'; }
+        media.dataset.loaded='1';
+        const v=media.querySelector('video');
+        v.play().catch(()=>{});
+      }else{
+        ter('Không phát được video này');
+      }
+    }catch(e){console.warn('preview lỗi',e); ter('Không phát được video này');}
+  }
+
+  // ---------- Xem danh sách kênh/trang/playlist ----------
+  $('#btn-dl-resolve').onclick=async()=>{
+    const url=$('#dl-url').value.trim();
+    if(!url){ter('Vui lòng dán liên kết');return}
+    const btn=$('#btn-dl-resolve');
+    try{
+      btn.disabled=true;btn.innerHTML='<div class="spin"></div> Đang quét...';
+      $('#dl-list-wrap').style.display='none';
+      $('#dl-batch-result').innerHTML='';
+      const r=await post('/api/video/resolve',{url:url});
+      const items=r.items||[];
+      dlItems = items;
+      $('#dl-total').textContent=items.length;
+      if(items.length===0){
+        $('#dl-list-wrap').style.display='block';
+        $('#dl-list').innerHTML='<div class="xs mu">Không tìm thấy video/ảnh nào trên link này.</div>';
+        tok('Không tìm thấy nội dung nào');
+        return;
+      }
+      $('#dl-list').innerHTML = items.map((it,idx)=>{
+        const sel = it.available_qualities||['best','1080','720','480','audio'];
+        const opts = sel.map(q=>`<option value="${esc(q)}" ${q==='720'?'selected':''}>${q}</option>`).join('');
+        const thumb = it.thumbnail || '';
+        return `<div class="dl-card" style="display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--radius-sm)">
+          <div id="dl-media-${idx}" class="dl-thumb-wrap" data-idx="${idx}" data-loaded="0" style="position:relative;border-radius:8px;overflow:hidden;background:#0b0d14;aspect-ratio:16/9;cursor:pointer">
+            <img class="dl-thumb" src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.parentElement.querySelector('.dl-thumb-fb').style.display='flex'">
+            <div class="dl-thumb-fb" style="display:none;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#666;font-size:13px;background:#111">📷</div>
+            ${it.duration?`<div style="position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.75);color:#fff;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600">${fmtT(it.duration)}</div>`:''}
+            <div style="position:absolute;left:8px;top:8px;background:rgba(0,0,0,.6);border-radius:4px;padding:4px 8px;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#fff">
+              <input type="checkbox" class="dl-item" data-idx="${idx}" style="width:16px;height:16px;accent-color:var(--ac);margin:0">
+              <span>Chọn</span>
+            </div>
+            <div style="position:absolute;right:8px;top:8px;background:rgba(0,0,0,.7);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.4)">▶</div>
+          </div>
+          <div class="bold sm" title="${esc(it.title)}" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3">${esc(it.title)}</div>
+          <div class="xs mu" style="display:flex;gap:10px;flex-wrap:wrap">
+            ${it.like_count?`<span>👍 ${it.like_count}</span>`:''}
+            ${it.comment_count?`<span>💬 ${it.comment_count}</span>`:''}
+            ${it.view_count?`<span>👁 ${it.view_count}</span>`:''}
+          </div>
+          <div class="row gap-8" style="align-items:center">
+            <select class="dl-quality" data-idx="${idx}" style="flex:1;padding:7px 9px;border:1px solid var(--bd);border-radius:7px;background:var(--bg3);color:var(--tx);font-size:12px">${opts}</select>
+            <button class="btn btn-sm btn-p dl-one" data-idx="${idx}" style="flex-shrink:0;padding:7px 14px">📥 Tải về máy</button>
+          </div>
+        </div>`;
+      }).join('');
+      // Xem trước trực tiếp trên thẻ: bấm vào ảnh thu nhỏ
+      $$('.dl-thumb-wrap').forEach(el=>{
+        el.onclick=()=>togglePreview(+el.dataset.idx);
+      });
+      // Gán sự kiện chọn từng item
+      $$('.dl-item').forEach(cb=>cb.onclick=()=>{});
+      $$('.dl-one').forEach(btn=>btn.onclick=async()=>{
+        const idx=+btn.dataset.idx;
+        const it=items[idx];
+        const quality=$$(`.dl-quality[data-idx="${idx}"]`)[0].value;
+        await dlOne(it.url, it.title||'', quality);
+      });
+
+      // Chọn tất cả / bỏ chọn
+      $('#btn-dl-select-all').onclick=()=>{$$('.dl-item').forEach(cb=>cb.checked=true);};
+      $('#btn-dl-select-none').onclick=()=>{$$('.dl-item').forEach(cb=>cb.checked=false);};
+
+      // Tải batch
+      $('#btn-dl-batch').onclick=async()=>{
+        const checked=$$('.dl-item:checked');
+        if(checked.length===0){ter('Vui lòng chọn ít nhất một mục');return}
+        const batchItems=Array.from(checked).map(cb=>{
+          const idx=+cb.dataset.idx;
+          const it=items[idx];
+          return {url:it.url, title:it.title||'', quality:$$(`.dl-quality[data-idx="${idx}"]`)[0].value};
+        });
+        await dlBatch(batchItems);
+      };
+
+      $('#dl-list-wrap').style.display='block';
+      tok(`Tìm thấy ${items.length} mục`);
+    }catch(e){
+      ter(e.message);
+    }finally{btn.disabled=false;btn.innerHTML='🔍 Xem danh sách kênh'}
+  };
+
+  // ---------- Tải ngay 1 video (giữ nguyên chức năng cũ) ----------
+  $('#btn-dl-one').onclick=async()=>{
+    const url=$('#dl-url').value.trim();
+    if(!url){ter('Vui lòng dán liên kết video');return}
+    const btn=$('#btn-dl-one');
+    try{
+      btn.disabled=true;btn.innerHTML='<div class="spin"></div> Đang kết nối tải...';
+      $('#dl-preview').innerHTML='<div class="card-sm row gap-8" style="background:var(--bg3)"><div class="spin"></div><span>Đang trích xuất video chất lượng cao không watermark...</span></div>';
+      const r=await post('/api/video/download',{url:url});
+      lastWorkingVideoUrl=r.video_url;
+
+      $('#dl-preview').innerHTML=`
+        <div class="card-sm su" style="background:var(--bg2);border:1px solid rgba(34,211,160,0.3)">
+          <div class="row mb12"><span class="badge b-ok">✅ Tải video thành công</span></div>
+          <div class="g2" style="align-items:center">
+            <video controls src="${esc(r.video_url)}" style="width:100%;max-height:280px;border-radius:var(--radius-sm);background:#000"></video>
+            <div>
+              <div class="bold lg mb6">${esc(r.title)}</div>
+              <div class="xs mu mb16">Thời lượng: <b>${fmtT(r.duration)}</b> · Định dạng: <b>MP4 HD</b></div>
+              <div class="row gap-8" style="flex-wrap:wrap">
+                <a href="${esc(r.video_url)}" download class="btn btn-p">⬇ Tải file MP4 về máy tính</a>
+                <button class="btn btn-ok" id="btn-goto-sub">🎙️ Chuyển sang Dịch & Thêm Sub ➔</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      tok('Đã tải video về thành công!');
+
+      if($('#btn-goto-sub')){
+        $('#btn-goto-sub').onclick=()=>{
+          tab='subtitles';
+          render();
+        };
+      }
+    }catch(e){
+      ter(e.message);
+      $('#dl-preview').innerHTML=`<div class="card-sm er" style="background:var(--er2);border:1px solid rgba(248,113,113,0.3)">❌ Lỗi tải: ${esc(e.message)}</div>`;
+    }finally{btn.disabled=false;btn.innerHTML='📥 Tải ngay 1 video'}
+  };
+
+  // ---------- Hàm helper tải 1 mục ----------
+  // ---------- Helper: tự động download file về máy người dùng ----------
+  function triggerDownload(url, filename){
+    try{
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename || 'video.mp4';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }catch(e){
+      console.warn('Tự động download lỗi:', e);
+    }
+  }
+
+  // ---------- Hàm helper tải 1 mục ----------
+  async function dlOne(url, title, quality){
+    const r=await post('/api/video/batch-download',{items:[{url,title,quality}]});
+    const res=(r.results||[])[0];
+    if(res.status==='done'){
+      lastWorkingVideoUrl=res.video_url;
+      triggerDownload(res.video_url, (res.title||title||'video') + '.mp4');
+      $('#dl-batch-result').innerHTML=`
+        <div class="card-sm su mt8" style="background:var(--bg2);border:1px solid rgba(34,211,160,0.3)">
+          <div class="row mb8"><span class="badge b-ok">✅ ${esc(res.title||title)}</span></div>
+          <video controls src="${esc(res.video_url)}" style="width:100%;max-height:220px;border-radius:var(--radius-sm);background:#000;margin-bottom:8px"></video>
+          <div class="row gap-8">
+            <a href="${esc(res.video_url)}" download class="btn btn-p">⬇ Tải về máy tính (tải lại nếu cần)</a>
+          </div>
+          <div class="xs mu">Đã bắt đầu lưu về máy của bạn.</div>
+        </div>` + $('#dl-batch-result').innerHTML;
+      tok('Tải xong 1 mục — đã lưu về máy!');
+    }else{
+      ter(res.error||'Lỗi tải');
+    }
+  }
+
+  // ---------- Tải nhiều mục ----------
+  async function dlBatch(items){
+    const btn=$('#btn-dl-batch');
+    btn.disabled=true;btn.innerHTML='<div class="spin"></div> Đang tải...';
+      const jobId = (crypto.randomUUID && crypto.randomUUID()) || ('job_'+Date.now());
+      const progWrap=$('#dl-progress-wrap');
+      const progBar=$('#dl-progress-bar');
+      const progText=$('#dl-progress-text');
+      if(progWrap){progWrap.style.display='block';}
+      if(progBar){progBar.style.width='0%';}
+      if(progText){progText.textContent='0%';}
+      let pollT=null;
+      const pollProgress=async()=>{
+        try{
+          const r=await api('/api/video/download-progress/'+jobId);
+          const p=r.percent||0;
+          if(progBar)progBar.style.width=p+'%';
+          if(progText)progText.textContent=p+'%';
+        }catch(e){}
+      };
+      pollT=setInterval(pollProgress,500);
+    try{
+      const r=await post('/api/video/batch-download',{items,job_id:jobId});
+      const results=r.results||[];
+      const done=results.filter(x=>x.status==='done').length;
+      let html='<h3>📦 Kết quả tải batch</h3>';
+      results.forEach((res,i)=>{
+        if(res.status==='done'){
+          triggerDownload(res.video_url, (res.title||'video') + '.mp4');
+          html+=`
+            <div class="card-sm su mb8" style="background:var(--bg2);border:1px solid rgba(34,211,160,0.3)">
+              <div class="row mb8"><span class="badge b-ok">✅ ${esc(res.title)}</span></div>
+              ${res.video_url?`<video controls src="${esc(res.video_url)}" style="width:100%;max-height:200px;border-radius:var(--radius-sm);background:#000;margin-bottom:8px"></video>`:''}
+              <div class="row gap-8">
+                ${res.video_url?`<a href="${esc(res.video_url)}" download class="btn btn-p">⬇ Tải về máy tính (tải lại nếu cần)</a>`:''}
+              </div>
+              <div class="xs mu">Đã lưu về máy của bạn.</div>
+            </div>`;
+        }else{
+          html+=`<div class="card-sm er mb8" style="background:var(--er2);color:#fff">${esc(res.title||res.url)} — ${esc(res.error||'Lỗi')}</div>`;
+        }
+      });
+      $('#dl-batch-result').innerHTML=html;
+      if(progBar)progBar.style.width='100%';
+      if(progText)progText.textContent='100%';
+      tok(`Hoàn tất ${done}/${results.length} mục — các file đã được lưu về máy`);
+    }catch(e){
+      ter(e.message);
+      $('#dl-batch-result').innerHTML=`<div class="card-sm er" style="background:var(--er2);color:#fff">❌ Lỗi: ${esc(e.message)}</div>`;
+    }finally{
+      if(pollT)clearInterval(pollT);
+      btn.disabled=false;btn.innerHTML='📥 Tải các mục đã chọn';
+    }
+  }
+}
+/* ─────────── 5. DỊCH THUẬT & THÊM PHỤ ĐỀ / LÀM MỜ VIDEO (TÍNH NĂNG ĐỘC LẬP) ─────────── */
+async function pgSubtitles(){
+  const pc=$('#page');
+  pc.innerHTML=`
+    <div class="sec">
+      <div>
+        <div class="ptitle">🎙️ Dịch thuật & Thêm Phụ đề Video</div>
+        <div class="pdesc">Tự động nhận diện giọng nói (Whisper), chuyển ngữ sang tiếng Việt, tuỳ chọn vị trí đặt subtitle và làm mờ logo/watermark.</div>
+      </div>
+    </div>
+
+    <!-- CẤU HÌNH HUGGING FACE API KEY -->
+    <div class="card mb16">
+      <div class="row mb8">
+        <span style="font-size:20px">🤗</span>
+        <h3 style="margin:0">Cấu hình Hugging Face API (Whisper-Large-v3 & Translation)</h3>
+        <span class="mla badge" id="hf-badge">Đang kiểm tra...</span>
+      </div>
+      <div class="pdesc mb10">Sử dụng Hugging Face Inference API cho mô hình nhận diện giọng nói siêu chuẩn <b>openai/whisper-large-v3</b> và mô hình dịch thuật <b>Helsinki-NLP/opus-mt-en-vi</b>.</div>
+      <div class="field" style="margin:0">
+        <label>Hugging Face API Token (hf_...)</label>
+        <div class="row gap-8">
+          <input id="hf-key-input" type="password" placeholder="Nhập Hugging Face token (hf_...) hoặc để trống nếu đã cấu hình trong .env">
+          <button class="btn btn-sm" id="btn-toggle-hf" type="button">👁️</button>
+        </div>
+        <div class="xs mu mt4">Token có thể lưu vào file <code>.env</code> (HUGGINGFACE_API_KEY=hf_...) hoặc nhập trực tiếp tại đây.</div>
+      </div>
+    </div>
+
+    <!-- KHỐI CHỌN NGUỒN VIDEO -->
+    <div class="card mb16">
+      <h3>1. Chọn video nguồn để xử lý</h3>
+      <div class="pdesc mb14">Bạn có thể tải file video từ máy tính lên, hoặc dùng video vừa tải từ mạng xã hội.</div>
+
+      <div class="g2" style="align-items:start">
+        <div class="card-sm" style="background:var(--bg3)">
+          <div class="bold mb6">📁 Cách A: Tải file video từ máy tính</div>
+          <input type="file" id="sub-file" accept="video/*">
+          <div id="sub-file-info" class="xs mu mt6"></div>
+        </div>
+        <div class="card-sm" style="background:var(--bg3)">
+          <div class="bold mb6">🔗 Cách B: Đường dẫn video (URL)</div>
+          <input id="sub-url-input" value="${esc(lastWorkingVideoUrl)}" placeholder="/media/outputs/... hoặc URL video">
+          <div class="xs mu mt6">Tự động điền video vừa tải về nếu có</div>
+        </div>
+      </div>
+      <div id="sub-source-player" class="mt14"></div>
+    </div>
+
+    <!-- KHỐI PHIÊN ÂM & DỊCH THUẬT -->
+    <div class="card mb16">
+      <h3>2. Phiên âm & Dịch thuật sang Tiếng Việt</h3>
+      <div class="pdesc mb14">Hệ thống sử dụng AI Whisper trích xuất câu từ và dịch tự nhiên sang tiếng Việt kèm mốc thời gian chuẩn.</div>
+
+      <button class="btn btn-ok" id="btn-trans-start" style="padding:9px 16px">🎙️ Bắt đầu Phiên âm & Dịch Tiếng Việt</button>
+      <div id="trans-status" class="mt8 sm mu"></div>
+
+      <div class="field mt14">
+        <label>Nội dung phụ đề SRT (Bạn có thể trực tiếp chỉnh sửa câu từ ở đây)</label>
+        <textarea id="sub-srt-box" rows="8" placeholder="Phụ đề tiếng Việt theo từng mốc thời gian sẽ xuất hiện ở đây..."></textarea>
+      </div>
+    </div>
+
+    <!-- KHỐI TUỲ BIẾN PHỤ ĐỀ & LÀM MỜ -->
+    <div class="g2 mb16" style="align-items:start">
+      <div class="card">
+        <h3>3. Vị trí & Kiểu hiển thị Subtitle</h3>
+        <div class="field mt12">
+          <label>Vị trí đặt Subtitle trên video</label>
+          <select id="sub-v-pos">
+            <option value="bottom" selected>Dưới cùng (Bottom — Chuẩn điện ảnh)</option>
+            <option value="middle">Chính giữa (Middle — Dễ đọc khi lướt video)</option>
+            <option value="top">Trên cùng (Top — Tránh bị che bởi nút thả tim/bình luận)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Cỡ chữ Subtitle</label>
+          <select id="sub-v-size">
+            <option value="16">16px — Nhỏ gọn tinh tế</option>
+            <option value="18" selected>18px — Tiêu chuẩn rõ nét</option>
+            <option value="22">22px — Lớn / Nổi bật</option>
+            <option value="26">26px — Rất lớn</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>4. Làm mờ vùng video (Logo / Watermark)</h3>
+        <div class="pdesc mb10">Áp dụng bộ lọc mờ (Boxblur) để che bớt logo hoặc ID kênh cũ</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:12px">
+          <input type="checkbox" id="chk-blur-sub" style="width:auto">
+          <span class="bold">Bật bộ lọc làm mờ</span>
+        </label>
+        <div id="blur-box-inputs" class="hide">
+          <div class="g4 mb8">
+            <div class="field"><label>Toạ độ X</label><input type="number" id="sub-bx" value="20"></div>
+            <div class="field"><label>Toạ độ Y</label><input type="number" id="sub-by" value="20"></div>
+            <div class="field"><label>Rộng (W)</label><input type="number" id="sub-bw" value="240"></div>
+            <div class="field"><label>Cao (H)</label><input type="number" id="sub-bh" value="80"></div>
+          </div>
+          <div class="qa">
+            <button class="qa-btn" onclick="$('#sub-bx').value=20;$('#sub-by').value=20;$('#sub-bw').value=260;$('#sub-bh').value=80">Góc trên trái (Logo)</button>
+            <button class="qa-btn" onclick="$('#sub-bx').value=450;$('#sub-by').value=20;$('#sub-bw').value=260;$('#sub-bh').value=80">Góc trên phải</button>
+            <button class="qa-btn" onclick="$('#sub-bx').value=450;$('#sub-by').value=750;$('#sub-bw').value=260;$('#sub-bh').value=120">Góc dưới phải</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NÚT XUẤT VIDEO -->
+    <div class="card">
+      <div class="row gap-8">
+        <button class="btn btn-p" id="btn-export-sub" style="padding:10px 22px;font-size:14px">🎬 Xuất Video Đã Vietsub & Xử lý</button>
+      </div>
+      <div id="sub-export-result" class="mt16"></div>
+    </div>`;
+
+  let selectedSourceUrl=lastWorkingVideoUrl;
+
+  // Check HF Status
+  try{
+    const hfStat=await api('/api/video/hf-status');
+    const b=$('#hf-badge');
+    if(b){
+      if(hfStat.configured){
+        b.className='mla badge b-ok';
+        b.textContent='✅ Đã cấu hình trong .env ('+hfStat.masked_key+')';
+      }else{
+        b.className='mla badge b-warn';
+        b.textContent='⚠️ Chưa có trong .env — có thể nhập bên dưới';
+      }
+    }
+  }catch{}
+
+  if($('#btn-toggle-hf'))$('#btn-toggle-hf').onclick=()=>{
+    const inp=$('#hf-key-input');
+    if(inp)inp.type=inp.type==='password'?'text':'password';
+  };
+
+  const updateSourcePreview=(url)=>{
+    if(!url){$('#sub-source-player').innerHTML='';return}
+    selectedSourceUrl=url;
+    $('#sub-source-player').innerHTML=`
+      <div class="card-sm row gap-12" style="background:var(--bg2)">
+        <video controls src="${esc(url)}" style="max-height:180px;border-radius:var(--radius-sm);background:#000"></video>
+        <div>
+          <div class="bold mb4">Video nguồn đã sẵn sàng</div>
+          <div class="xs mu mb8">${esc(url)}</div>
+          <span class="badge b-ok">✅ Đã nạp video</span>
+        </div>
+      </div>`;
+  };
+
+  if(selectedSourceUrl)updateSourcePreview(selectedSourceUrl);
+
+  // File upload from computer
+  $('#sub-file').onchange=async()=>{
+    const f=$('#sub-file').files[0];
+    if(!f)return;
+    try{
+      $('#sub-file-info').innerHTML='<div class="spin"></div> Đang upload video...';
+      const u=await upload(f);
+      $('#sub-url-input').value=u;
+      $('#sub-file-info').innerHTML='<span class="ok">✅ Đã tải lên file thành công</span>';
+      updateSourcePreview(u);
+    }catch(e){ter(e.message);$('#sub-file-info').innerHTML='<span class="er">Lỗi tải lên</span>'}
+  };
+
+  $('#sub-url-input').onchange=()=>{
+    updateSourcePreview($('#sub-url-input').value.trim());
+  };
+
+  // Transcribe & Translate
+  $('#btn-trans-start').onclick=async()=>{
+    const targetUrl=selectedSourceUrl||$('#sub-url-input').value.trim();
+    if(!targetUrl){ter('Vui lòng chọn hoặc nhập video nguồn trước');return}
+    const btn=$('#btn-trans-start');
+    try{
+      btn.disabled=true;btn.innerHTML='<div class="spin"></div> Đang nhận diện giọng nói & dịch...';
+      $('#trans-status').innerHTML='<div class="spin"></div> Đang kết nối mô hình Whisper và dịch thuật...';
+      const customKey=$('#hf-key-input')?.value.trim()||undefined;
+      const r=await post('/api/video/transcribe',{
+        video_url:targetUrl,
+        translate_to_vi:true,
+        hf_api_key:customKey
+      });
+      $('#sub-srt-box').value=r.srt;
+      $('#trans-status').innerHTML=`<span class="ok bold">✅ Hoàn thành! Engine: <span class="badge b-ac">${esc(r.engine_used||'Whisper')}</span> · Ngôn ngữ gốc: <b>${r.language}</b> · Đã dịch <b>${r.segments.length} câu</b> sang tiếng Việt.</span>`;
+      tok('Đã tạo phụ đề Tiếng Việt thành công!');
+    }catch(e){
+      ter(e.message);
+      $('#trans-status').innerHTML=`<span class="er">❌ Lỗi: ${esc(e.message)}</span>`;
+    }finally{btn.disabled=false;btn.innerHTML='🎙️ Bắt đầu Phiên âm & Dịch Tiếng Việt'}
+  };
+
+  // Toggle blur
+  $('#chk-blur-sub').onchange=()=>{
+    $('#blur-box-inputs').classList.toggle('hide',!$('#chk-blur-sub').checked);
+  };
+
+  // Export video
+  $('#btn-export-sub').onclick=async()=>{
+    const targetUrl=selectedSourceUrl||$('#sub-url-input').value.trim();
+    if(!targetUrl){ter('Chưa có video nguồn');return}
+    const btn=$('#btn-export-sub');
+    try{
+      btn.disabled=true;btn.innerHTML='<div class="spin"></div> Đang ghép phụ đề & xử lý video...';
+      const srt=$('#sub-srt-box').value.trim();
+      let blurRegion=null;
+      if($('#chk-blur-sub').checked){
+        blurRegion={
+          x:+$('#sub-bx').value,
+          y:+$('#sub-by').value,
+          width:+$('#sub-bw').value,
+          height:+$('#sub-bh').value
+        };
+      }
+      const r=await post('/api/video/process',{
+        video_url:targetUrl,
+        srt_content:srt,
+        sub_position:$('#sub-v-pos').value,
+        sub_font_size:+$('#sub-v-size').value,
+        blur_region:blurRegion
+      });
+
+      $('#sub-export-result').innerHTML=`
+        <div class="card su" style="border-color:rgba(34,211,160,0.35);background:var(--card)">
+          <div class="row mb12"><span class="badge b-ok">✅ Video hoàn thiện xuất bản!</span></div>
+          <video controls src="${esc(r.output_video_url)}" style="width:100%;max-height:420px;border-radius:var(--radius-sm);background:#000;display:block;margin-bottom:12px"></video>
+          <div class="row gap-8">
+            <a href="${esc(r.output_video_url)}" download class="btn btn-p">⬇ Tải video hoàn chỉnh về máy</a>
+            <a href="${esc(r.output_video_url)}" target="_blank" class="btn">↗ Mở tab xem đầy màn hình</a>
+          </div>
+        </div>`;
+      tok('Đã xuất video vietsub thành công!');
+      $('#sub-export-result').scrollIntoView({behavior:'smooth'});
+    }catch(e){ter(e.message)}
+    finally{btn.disabled=false;btn.innerHTML='🎬 Xuất Video Đã Vietsub & Xử lý'}
+  };
+}
+
+/* ─────────── 5. NHẬT KÝ TÀI KHOẢN (ACTIVITY LOG - YÊU CẦU 2) ─────────── */
+async function pgActivity(){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    const logs=await api('/api/auth/me/activity');
+    const actLabel=a=>{
+      const map={
+        login:'🔑 Đăng nhập',
+        register:'✨ Đăng ký tài khoản',
+        generate_video:'🎬 Tạo video template',
+        assistant_video_generate:'🤖 Trợ lý AI tạo video',
+        topup_created:'💎 Tạo lệnh nạp credit',
+        topup_success:'✅ Nạp credit thành công',
+        video_download:'📥 Tải video mạng xã hội',
+        video_transcribe:'🎙️ Dịch thuật / Phụ đề video',
+        video_process:'🎞️ Xuất video vietsub',
+        ai_assistant_analyze:'🧠 Phân tích kịch bản AI',
+        ai_generate_character:'🎨 Tạo ảnh nhân vật AI'
+      };
+      return map[a]||a;
+    };
+
+    pc.innerHTML=`
+      <div class="sec">
+        <div>
+          <div class="ptitle">📋 Nhật ký hoạt động tài khoản</div>
+          <div class="pdesc">Lưu trữ toàn bộ các phiên đăng nhập, tạo video, nạp tiền và tương tác của bạn</div>
+        </div>
+        <button class="btn btn-sm" onclick="pgActivity()">🔄 Làm mới</button>
+      </div>
+
+      <div class="card">
+        ${logs.length?`
+          <div class="tw">
+            <table>
+              <tr>
+                <th>Thời gian</th>
+                <th>Hành động</th>
+                <th>Địa chỉ IP</th>
+                <th>Chi tiết hoạt động</th>
+              </tr>
+              ${logs.map(l=>`
+                <tr>
+                  <td class="xs mu" style="white-space:nowrap">${fmtD(l.created_at)}</td>
+                  <td class="bold">${actLabel(l.action)}</td>
+                  <td class="xs mu">${esc(l.ip||'—')}</td>
+                  <td class="sm">
+                    ${Object.entries(l.details||{}).map(([k,v])=>`<span class="tag mr4" style="margin-right:4px"><b>${esc(k)}:</b> ${esc(typeof v==='object'?JSON.stringify(v):v)}</span>`).join('')||'—'}
+                  </td>
+                </tr>`).join('')}
+            </table>
+          </div>`:
+          `<div class="empty"><div class="empty-ic">📋</div><div class="bold">Chưa có ghi nhận hoạt động</div></div>`}
+      </div>`;
+  }catch(e){pc.innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+/* ─────────── 6. LỊCH SỬ RENDER ─────────── */
+async function pgHist(){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    const gs=await api('/api/generations');
+    const hasPend=gs.some(g=>g.status==='pending'||g.status==='processing');
+    const sb=s=>{const m={success:'b-ok',failed:'b-er',processing:'b-warn',pending:'b-mu'};const l={success:'✅ Thành công',failed:'❌ Thất bại',processing:'⏳ Xử lý',pending:'⏳ Chờ'};return`<span class="badge ${m[s]||'b-mu'}">${l[s]||s}</span>`};
+    pc.innerHTML=`
+      <div class="sec">
+        <div><div class="ptitle">Lịch sử tạo video</div><div class="pdesc">Tất cả video bạn đã tạo trên hệ thống</div></div>
+        <button class="btn btn-sm" onclick="pgHist()">🔄 Làm mới</button>
+      </div>
+      ${!gs.length?`<div class="empty"><div class="empty-ic">📭</div><div style="font-size:14px;font-weight:600;color:var(--tx2)">Chưa có lịch sử</div><div class="sm mu">Bắt đầu tạo video từ Thư viện</div></div>`
+      :`<div style="display:flex;flex-direction:column;gap:9px">
+        ${gs.map(g=>`<div class="hi">
+          <div class="hi-th">
+            ${g.output_video_url?`<video muted loop preload="none" src="${esc(g.output_video_url)}" onmouseenter="this.play()" onmouseleave="this.pause()" style="width:100%;height:100%;object-fit:cover"></video>`:`<span style="font-size:18px;opacity:.3">🎬</span>`}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div class="row gap-6 mb4">${sb(g.status)}<span class="tag">${g.render_type}</span><span class="xs mu">#${g.id}</span></div>
+            <div class="bold sm mb2">${esc(g.title||'Tác phẩm #'+g.id)}</div>
+            <div class="xs mu">${fmtD(g.created_at)} · Danh mục: <b>${esc(g.user_category||'Mặc định')}</b> · 💳 ${g.credits_cost} credit</div>
+            ${g.error_message?`<div class="xs er mt4">${esc(g.error_message.slice(0,100))}</div>`:''}
+          </div>
+          <div class="row gap-5">
+            ${g.output_video_url?`<a href="${esc(g.output_video_url)}" target="_blank" class="btn btn-sm btn-ok">▶ Xem</a><a href="${esc(g.output_video_url)}" download class="btn btn-sm">⬇</a>`:''}
+          </div>
+        </div>`).join('')}
+      </div>`}`;
+    if(hasPend)pollT=setTimeout(pgHist,3000);
+  }catch(e){$('#page').innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+/* ─────────── 7. NẠP CREDIT (VIETQR) ─────────── */
+async function pgTopup(){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    const [cfg,txs,adj]=await Promise.all([api('/api/billing/config'),api('/api/billing/transactions'),api('/api/billing/adjustments')]);
+    const cr=n=>+(n/cfg.vnd_per_credit).toFixed(2);
+    pc.innerHTML=`
+      <div class="ptitle mb4">Nạp Credit</div>
+      <div class="pdesc mb20">VietQR · Tự động cộng · Hiệu lực ${Math.round(cfg.ttl_seconds/60)} phút</div>
+      ${cfg.promotions.map(p=>`<div class="card mb12" style="border-color:rgba(34,211,160,.3);background:var(--ok2)">
+        🎉 <b>${esc(p.name)}</b>: ${p.tiers.map(t=>`từ <b>${fmtV(t.min_vnd)}</b> thưởng <b class="ok">+${t.bonus_percent}%</b>`).join(' · ')}
+        ${p.ends_at?`<span class="xs mu"> (đến ${fmtD(p.ends_at)})</span>`:''}
+      </div>`).join('')}
+      <div class="g2" style="gap:18px;align-items:start">
+        <div class="card">
+          <h3>Tạo mã QR</h3>
+          <div class="field"><label>Số tiền (tối thiểu ${fmtV(cfg.min_vnd)})</label>
+            <input id="amt" type="number" min="${cfg.min_vnd}" max="${cfg.max_vnd}" step="1000" value="${Math.max(cfg.min_vnd,50000)}">
+          </div>
+          <div class="qa mb12">
+            ${cfg.quick_amounts.map(q=>`<button class="qa-btn" data-q="${q.amount_vnd}">${fmtV(q.amount_vnd)}${q.bonus_percent>0?` <span class="ok xs">+${q.bonus_percent}%</span>`:''}</button>`).join('')}
+          </div>
+          <div class="card-sm mb12" style="background:var(--bg3)"><div id="conv" class="sm"></div></div>
+          <button class="btn btn-p" id="qr-go" style="width:100%;justify-content:center;padding:10px">Tạo mã VietQR</button>
+          <div id="qr-box" class="mt16"></div>
+        </div>
+        <div>
+          <div class="card mb16">
+            <h3>Giao dịch gần đây</h3>
+            <div class="tw"><table>
+              <tr><th>Mã</th><th>Số tiền</th><th>Credit</th><th>Trạng thái</th></tr>
+              ${txs.slice(0,6).map(t=>`<tr>
+                <td class="xs mu">${t.transaction_code}</td>
+                <td>${fmtV(t.amount_vnd)}</td>
+                <td class="ok bold">+${t.credits_added}${t.bonus_credits>0?` <span class="xs mu">(+${t.bonus_credits}🎁)</span>`:''}</td>
+                <td><span class="badge ${t.status==='success'?'b-ok':t.status==='pending'?'b-warn':'b-er'}">${t.status}</span></td>
+              </tr>`).join('')||`<tr><td class="mu" colspan="4">Chưa có giao dịch</td></tr>`}
+            </table></div>
+          </div>
+          ${adj.length?`<div class="card">
+            <h3>Admin điều chỉnh</h3>
+            <div class="tw"><table>
+              <tr><th>Thời gian</th><th>Số lượng</th><th>Sau</th><th>Lý do</th></tr>
+              ${adj.map(a=>`<tr><td class="xs mu">${fmtD(a.created_at)}</td><td class="${a.amount>0?'ok':'er'} bold">${a.amount>0?'+':''}${a.amount}</td><td>${a.balance_after}</td><td class="xs mu">${esc(a.reason||'—')}</td></tr>`).join('')}
+            </table></div>
+          </div>`:''}
+        </div>
+      </div>`;
+
+    const upConv=async()=>{
+      const v=+$('#amt').value;if(!v||v<0)return;
+      try{
+        const q=await api('/api/billing/quote?amount_vnd='+v);
+        $('#conv').innerHTML=`Nhận: <b class="ac">${q.total_credits} credit</b>${q.bonus_credits>0?` (<span class="ok">+${q.bonus_credits} thưởng ${q.promo_name}</span>)`:''}`;
+      }catch{const c=cr(v);$('#conv').innerHTML=`Nhận: <b class="ac">${c} credit</b>`}
+    };
+    $('#amt').oninput=upConv;
+    $$('[data-q]').forEach(b=>b.onclick=()=>{$('#amt').value=b.dataset.q;upConv()});
+    upConv();
+
+    $('#qr-go').onclick=async()=>{
+      try{
+        const r=await post('/api/billing/topup',{amount_vnd:+$('#amt').value});
+        let sec=r.seconds_left||cfg.ttl_seconds;
+        const tick=()=>{
+          const el=$('#qr-time');if(!el)return;
+          if(sec<=0){el.innerHTML='<span class="er">Mã đã hết hạn</span>';return}
+          el.textContent=`Còn ${fmtT(sec)}`;sec--;setTimeout(tick,1000);
+        };
+        $('#qr-box').innerHTML=`<div class="card-sm su" style="text-align:center;background:var(--bg3)">
+          <div class="badge b-warn mb8" id="qr-time"></div>
+          <img src="${esc(r.qr_url)}" style="max-width:240px;width:100%;border-radius:var(--radius-sm);background:#fff;padding:6px;display:block;margin:0 auto 10px">
+          <div class="sm bold mb4">Nội dung chuyển khoản (bắt buộc):</div>
+          <div class="badge b-ac bold lg mb8" style="font-size:15px;letter-spacing:1px">${r.transaction_code}</div>
+          <div class="xs mu">Chuyển đúng số tiền và nội dung để hệ thống tự động cộng credit.</div>
+        </div>`;
+        tick();
+      }catch(e){ter(e.message)}
+    };
+  }catch(e){$('#page').innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+/* ─────────── 8. ADMIN PAGES ─────────── */
+async function pgUsers(selId=null){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    pc.innerHTML=`
+      <div class="sec"><div><div class="ptitle">Quản lý Tài khoản</div><div class="pdesc">Tìm kiếm, xem số dư và điều chỉnh credit</div></div></div>
+      <div class="g2" style="gap:18px;align-items:start">
+        <div class="card">
+          <div class="field"><label>Tìm tài khoản</label><input id="uq" placeholder="Tên hoặc email..."></div>
+          <div class="tw" id="ulist"></div>
+        </div>
+        <div>
+          <div id="upanel"></div>
+          <div id="ulog" class="mt16"></div>
+        </div>
+      </div>`;
+    let sel=selId,timer=null;
+    const loadU=async()=>{
+      const us=await api('/api/admin/users?q='+encodeURIComponent($('#uq')?.value||''));
+      const ul=$('#ulist');if(!ul)return us;
+      ul.innerHTML=`<table>
+        <tr><th>#</th><th>Tên</th><th>Email</th><th>Vai trò</th><th>Số dư</th><th></th></tr>
+        ${us.map(u=>`<tr ${u.id===sel?'style="background:rgba(99,102,241,.08)"':''}>
+          <td class="xs mu">${u.id}</td>
+          <td class="sm bold">${esc(u.username)}</td>
+          <td class="xs mu">${esc(u.email)}</td>
+          <td><span class="badge ${u.role==='admin'?'b-ac':'b-mu'}">${u.role}</span></td>
+          <td><b>${u.credits_balance}</b></td>
+          <td><button class="btn btn-sm" data-pick="${u.id}">Chọn →</button></td>
+        </tr>`).join('')||`<tr><td class="mu" colspan="6">Không có tài khoản</td></tr>`}
+      </table>`;
+      $$('[data-pick]').forEach(b=>b.onclick=()=>pgUsers(+b.dataset.pick));
+      return us;
+    };
+    $('#uq').oninput=()=>{clearTimeout(timer);timer=setTimeout(loadU,250)};
+    const us=await loadU();
+    const u=us.find(x=>x.id===sel)||(sel?(await api('/api/admin/users?q=')).find(x=>x.id===sel):null);
+
+    if(u){
+      $('#upanel').innerHTML=`<div class="card">
+        <div class="row mb16">
+          <div class="u-av" style="width:38px;height:38px;font-size:15px">${u.username[0].toUpperCase()}</div>
+          <div><div class="bold">${esc(u.username)}</div><div class="xs mu">${esc(u.email)}</div></div>
+        </div>
+        <div class="card-sm mb16" style="background:rgba(99,102,241,.1)">Số dư: <b class="ac">${u.credits_balance} credit</b></div>
+        <div class="field"><label>Số credit</label><input id="gam" type="number" step="0.01" placeholder="Dương = cộng, âm = trừ"></div>
+        <div class="qa mb12">${[10,50,100,500,1000].map(n=>`<button class="qa-btn" data-fill="${n}">+${n}</button>`).join('')}</div>
+        <div class="field"><label>Lý do (tuỳ chọn)</label><input id="grs" placeholder="Tặng, hoàn tiền..."></div>
+        <div class="card-sm mb12 xs mu" id="gprev"></div>
+        <div class="row gap-8">
+          <button class="btn btn-ok" id="g-add">➕ Cộng</button>
+          <button class="btn btn-er" id="g-sub">➖ Trừ</button>
+        </div>
+      </div>`;
+      const prev=()=>{const a=parseFloat($('#gam').value);const el=$('#gprev');if(!a||!el)return;el.innerHTML=a>0?`→ <b class="ok">${+(u.credits_balance+a).toFixed(2)} credit</b>`:u.credits_balance+a>=0?`→ <b class="warn">${+(u.credits_balance+a).toFixed(2)} credit</b>`:`<span class="er">Không đủ số dư</span>`};
+      $('#gam').oninput=prev;
+      $$('[data-fill]').forEach(b=>b.onclick=()=>{$('#gam').value=b.dataset.fill;prev()});
+      const apply=async sign=>{
+        try{
+          const a=parseFloat($('#gam').value);if(!(a>0)){ter('Nhập số lớn hơn 0');return}
+          if(sign<0&&!confirm(`Trừ ${a} credit của ${u.username}?`))return;
+          const r=await post(`/api/admin/users/${u.id}/credits`,{amount:sign*a,reason:$('#grs').value||''});
+          tok(`${sign>0?'Cộng':'Trừ'} ${a} credit — số dư mới: ${r.credits_balance}`);
+          if(u.id===me.id)await refreshMe();pgUsers(u.id);
+        }catch(e){ter(e.message)}
+      };
+      $('#g-add').onclick=()=>apply(1);$('#g-sub').onclick=()=>apply(-1);
+    }
+    const log=await api('/api/admin/credit-log'+(u?'?user_id='+u.id:''));
+    const nm=us.reduce((acc,x)=>({...acc,[x.id]:x.username}),{});
+    $('#ulog').innerHTML=`<div class="card">
+      <h3>${u?`Lịch sử credit của ${esc(u.username)}`:'Điều chỉnh gần đây'}</h3>
+      <div class="tw"><table>
+        <tr><th>Thời gian</th><th>Tài khoản</th><th>Thay đổi</th><th>Sau</th><th>Lý do</th><th>Admin</th></tr>
+        ${log.map(a=>`<tr>
+          <td class="xs mu">${fmtD(a.created_at)}</td>
+          <td class="sm">${esc(nm[a.user_id]||'#'+a.user_id)}</td>
+          <td class="${a.amount>0?'ok':'er'} bold">${a.amount>0?'+':''}${a.amount}</td>
+          <td>${a.balance_after}</td>
+          <td class="sm">${esc(a.reason||'—')}</td>
+          <td class="xs mu">${esc(a.admin||'—')}</td>
+        </tr>`).join('')||`<tr><td class="mu" colspan="6">Chưa có điều chỉnh</td></tr>`}
+      </table></div>
+    </div>`;
+  }catch(e){$('#page').innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+async function pgAdm(){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    const ts=await api('/api/admin/templates');
+    pc.innerHTML=`
+      <div class="sec"><div><div class="ptitle">Quản trị Templates</div><div class="pdesc">Duyệt hoặc ẩn template trên toàn hệ thống</div></div></div>
+      <div class="card">
+        <div class="tw"><table>
+          <tr><th>ID</th><th>Tiêu đề</th><th>Loại</th><th>Trạng thái</th><th>Lượt dùng</th><th>Hành động</th></tr>
+          ${ts.map(t=>`<tr>
+            <td class="xs mu">#${t.id}</td>
+            <td class="bold sm">${esc(t.title)}</td>
+            <td><span class="badge b-mu">${esc(t.category)}</span></td>
+            <td><span class="badge ${t.status==='publish'?'b-ok':'b-warn'}">${t.status==='publish'?'Đã duyệt':'Chờ duyệt'}</span></td>
+            <td>${t.usage_count}</td>
+            <td>
+              <button class="btn btn-sm ${t.status==='publish'?'btn-warn':'btn-ok'}" data-pub="${t.id}" data-st="${t.status==='publish'?'private':'publish'}">
+                ${t.status==='publish'?'Ẩn':'Duyệt'}
+              </button>
+            </td>
+          </tr>`).join('')}
+        </table></div>
+      </div>`;
+    $$('[data-pub]').forEach(b=>b.onclick=async()=>{
+      try{
+        await patch(`/api/admin/templates/${b.dataset.pub}`,{status:b.dataset.st});
+        tok('Đã cập nhật trạng thái');pgAdm();
+      }catch(e){ter(e.message)}
+    });
+  }catch(e){pc.innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+async function pgPrice(){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    const res=await api('/api/admin/pricing');
+    const items=res.items||[];
+    pc.innerHTML=`
+      <div class="sec"><div><div class="ptitle">Bảng giá dịch vụ</div><div class="pdesc">Cấu hình giá credit cho từng luồng render và model AI</div></div></div>
+      <div class="card">
+        <div class="tw"><table>
+          <tr><th>Dịch vụ / Model</th><th>Giá (Credit)</th><th>Trạng thái</th><th>Thao tác</th></tr>
+          ${items.map(i=>`<tr>
+            <td class="bold sm">${esc(i.name||i.key)}</td>
+            <td><input type="number" step="0.1" value="${i.price}" id="p-${esc(i.key)}" style="width:110px"></td>
+            <td><span class="badge ${i.enabled?'b-ok':'b-er'}">${i.enabled?'Đang bật':'Tắt'}</span></td>
+            <td><button class="btn btn-sm btn-p" data-save-p="${esc(i.key)}">Lưu</button></td>
+          </tr>`).join('')}
+        </table></div>
+      </div>`;
+    $$('[data-save-p]').forEach(b=>b.onclick=async()=>{
+      const k=b.dataset.saveP;
+      const p=parseFloat($('#p-'+k).value);
+      try{
+        await patch('/api/admin/pricing/'+encodeURIComponent(k),{price:p});
+        tok('Đã cập nhật giá '+k);
+      }catch(e){ter(e.message)}
+    });
+  }catch(e){pc.innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+async function pgPromos(){
+  const pc=$('#page');
+  pc.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;padding:50px"><div class="spin"></div></div>`;
+  try{
+    const ps=await api('/api/admin/promotions');
+    pc.innerHTML=`
+      <div class="sec"><div><div class="ptitle">Khuyến mãi Nạp tiền</div><div class="pdesc">Chính sách thưởng bonus khi người dùng nạp tiền</div></div></div>
+      <div class="card">
+        <div class="tw"><table>
+          <tr><th>Tên chiến dịch</th><th>Mức thưởng</th><th>Thời hạn</th><th>Trạng thái</th></tr>
+          ${ps.map(p=>`<tr>
+            <td class="bold sm">${esc(p.name)}</td>
+            <td>${p.tiers.map(t=>`≥ ${fmtV(t.min_vnd)}: <b class="ok">+${t.bonus_percent}%</b>`).join(' · ')}</td>
+            <td class="xs mu">${p.end_at?fmtD(p.end_at):'Vô thời hạn'}</td>
+            <td><span class="badge ${p.enabled?'b-ok':'b-er'}">${p.enabled?'Đang chạy':'Dừng'}</span></td>
+          </tr>`).join('')||`<tr><td class="mu" colspan="4">Chưa có khuyến mãi</td></tr>`}
+        </table></div>
+      </div>`;
+  }catch(e){pc.innerHTML=`<div class="card"><p class="er">${esc(e.message)}</p></div>`}
+}
+
+/* ── TRACK GEN HELPER ── */
+function trackGen(id,resId){
+  const tick=async()=>{
+    const area=document.getElementById(resId);if(!area)return;
+    try{
+      const g=await api('/api/generations/'+id);await refreshMe();
+      if(g.status==='success'){
+        area.innerHTML=`<div class="card su" style="border-color:rgba(34,211,160,.3)">
+          <div class="row mb12"><span class="badge b-ok">✅ Hoàn thành</span><span class="xs mu">Trừ ${g.credits_cost} credit</span></div>
+          <video controls src="${esc(g.output_video_url)}" style="width:100%;max-height:380px;border-radius:var(--radius-sm);background:#000"></video>
+          <div class="row mt12 gap-8">
+            <a href="${esc(g.output_video_url)}" download class="btn btn-sm btn-ok">⬇ Tải xuống</a>
+            <a href="${esc(g.output_video_url)}" target="_blank" class="btn btn-sm">↗ Mở</a>
+          </div>
+        </div>`;
+      }else if(g.status==='failed'){
+        area.innerHTML=`<div class="card-sm su" style="background:var(--er2);border:1px solid rgba(248,113,113,.3);border-radius:var(--radius)">
+          <span class="er">❌ Lỗi: ${esc(g.error_message)} — đã hoàn credit.</span></div>`;
+      }else{
+        const ai=g.render_type.startsWith('ai');
+        area.innerHTML=`<div class="card-sm su" style="background:var(--bg3)">
+          <div class="row gap-8 mb8"><div class="spin"></div><span>${ai?'🤖 Đang tạo video AI (vài phút)...':'⚡ Đang xử lý...'}</span></div>
+          <div class="pb"><div class="pf" style="width:${g.status==='processing'?'55':'20'}%"></div></div>
+        </div>`;
+        pollT=setTimeout(tick,2200);
+      }
+    }catch(e){const a=document.getElementById(resId);if(a)a.innerHTML=`<p class="er sm">Lỗi kiểm tra: ${esc(e.message)}</p>`}
+  };
+  tick();
+}
+
+/* ── INIT ── */
+boot();
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+# Local video pipeline requirements
+# Hardware requirement: NVIDIA GPU 8GB+ VRAM (Wan2.1-T2V-14B needs ~24GB for full model)
+# Python 3.8+
+
+# Core
+torch>=2.4.0
+transformers>=4.49.0
+diffusers>=0.31.0
+accelerate>=1.1.1
+Pillow>=10.0.0
+
+# Vision-language model (Step 1)
+qwen-vl-utils
+
+# Image generation (Step 2)
+ftfy
+
+# Video output
+imageio[ffmpeg]
+
+# Utilities
+huggingface_hub>=0.23.0
+numpy>=1.23.5,<2
+
+# Optional: bitsandbytes for 4-bit quantization (CPU-only CPUs won't benefit)
+bitsandbytes==0.42.0
+
+# System dependency (not pip-installable):
+# FFmpeg must be installed separately (sudo apt-get install ffmpeg or conda install ffmpeg)
+
+# NOTE: Total model download size: ~120GB+
+#   - Qwen2-VL-7B-Instruct: ~14GB
+#   - FLUX.1-schnell: ~36GB
+#   - Wan2.1-T2V-14B: ~59GB
